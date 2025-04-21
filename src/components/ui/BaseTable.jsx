@@ -7,7 +7,7 @@ export default function BaseTable({ data = [], columns = [], headerTitle = "Tabl
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h1 className="text-xl text-900 font-bold">{headerTitle}</h1>
-      <Button label={buttonLabel} onClick={onClick} />
+      <Button icon="pi pi-plus" label={buttonLabel} onClick={onClick} />
     </div>
   );
 
