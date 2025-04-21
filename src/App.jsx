@@ -1,5 +1,6 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AuthProvider from "./context/authContext";
 import Layout from "./components/Layout/MainLayout";
 import MarcasPage from "./pages/Marcas";
 import CategoriasPage from "./pages/Categorias";
@@ -11,12 +12,18 @@ import UnidadesPage from "./pages/Unidades";
 import UsuariosPage from "./pages/Usuarios";
 import LoginPage from "./pages/Login";
 
+import { AuthContext } from "./context/authContext";
+import { useContext } from "react";
+
 const App = () => {
+  const { auth } = useContext(AuthContext);
   return (
-    <BrowserRouter>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/" element={<Layout />}>
+        {/* ROTAS PÚBLICAS */}
+        <Route path="/login" element={auth.isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
+
+        {/* ROTAS PRIVADAS */}
+        <Route path="/" element={auth.isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
           <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
           <Route path="categorias" element={<CategoriasPage />} />
@@ -27,7 +34,6 @@ const App = () => {
           <Route path="unidades" element={<UnidadesPage />} />
         </Route>
       </Routes>
-    </BrowserRouter>
   );
 };
 

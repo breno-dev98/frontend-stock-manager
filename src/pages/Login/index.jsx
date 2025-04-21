@@ -1,17 +1,39 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
+import { loginService } from "../../services/authService";
+import { AuthContext } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
+  const navigate = useNavigate();
+  const { login } = useContext(AuthContext);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Aqui você pode adicionar lógica de autenticação
-    console.log("Login com:", { email, senha });
+
+    const dadosLogin = { email, senha };
+
+    try {
+      
+      const response = await loginService(dadosLogin);
+
+      
+      const token  = response.token; 
+
+      
+      login(token);
+
+      
+      navigate("/");
+    } catch (error) {
+      console.error("Erro ao realizar o login", error);
+      
+    }
   };
 
   return (
