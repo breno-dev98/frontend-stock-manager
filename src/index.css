@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.fix-password-icon > .p-icon-field > .p-input-icon {
+  margin-top: -0.7rem; /* Ajuste fino do alinhamento */
+}

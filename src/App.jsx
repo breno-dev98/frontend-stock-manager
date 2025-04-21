@@ -9,12 +9,13 @@ import SaidaPage from "./pages/Saida";
 import FornecedoresPage from "./pages/Fornecedores";
 import UnidadesPage from "./pages/Unidades";
 import UsuariosPage from "./pages/Usuarios";
-
+import LoginPage from "./pages/Login";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
         <Route path="/" element={<Layout />}>
           <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
