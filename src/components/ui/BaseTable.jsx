@@ -6,7 +6,7 @@ import { Button } from "primereact/button";
 export default function BaseTable({ data = [], columns = [], headerTitle = "Table", emptyMessage = "Nenhum item encontrado", buttonLabel = "Button", onClick = () => alert("Insira sua função aqui") }) {
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
-      <h1 className="text-xl text-900 font-bold">{headerTitle}</h1>
+      <h1 className="md:text-xl sm:text-md text-md text-900 font-bold">{headerTitle}</h1>
       <Button icon="pi pi-plus" label={buttonLabel} onClick={onClick} />
     </div>
   );
