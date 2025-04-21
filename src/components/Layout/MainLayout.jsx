@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
+import MarcasPage from "../../pages/Marcas";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -62,6 +63,7 @@ const Layout = () => {
         {/* Conteúdo principal com scroll se necessário */}
         <div className="flex-1 p-6 overflow-auto bg-gray-50">
           <Outlet />
+          <MarcasPage />
         </div>
       </div>
     </div>
