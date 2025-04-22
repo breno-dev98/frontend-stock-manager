@@ -11,7 +11,6 @@ import FornecedoresPage from "./pages/Fornecedores";
 import UnidadesPage from "./pages/Unidades";
 import UsuariosPage from "./pages/Usuarios";
 import LoginPage from "./pages/Login";
-
 import { AuthContext } from "./context/authContext";
 import { useContext } from "react";
 
@@ -20,10 +19,10 @@ const App = () => {
   return (
       <Routes>
         {/* ROTAS PÚBLICAS */}
-        <Route path="/login" element={auth.isAuthenticated ? <Navigate to="/" /> : <LoginPage />} />
+        <Route path="/login" element={!auth.isAuthenticated && <LoginPage />} />
 
         {/* ROTAS PRIVADAS */}
-        <Route path="/" element={auth.isAuthenticated ? <Layout /> : <Navigate to="/login" />}>
+        <Route path="/" element={auth.isAuthenticated && <Layout />}>
           <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
           <Route path="categorias" element={<CategoriasPage />} />

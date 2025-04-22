@@ -6,8 +6,10 @@ import { Card } from "primereact/card";
 import { loginService } from "../../services/authService";
 import { AuthContext } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
+import { ProgressSpinner } from "primereact/progressspinner";
 
 export default function LoginPage() {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [senha, setSenha] = useState("");
   const navigate = useNavigate();
@@ -19,20 +21,18 @@ export default function LoginPage() {
     const dadosLogin = { email, senha };
 
     try {
-      
+      setLoading(true);
       const response = await loginService(dadosLogin);
 
-      
-      const token  = response.token; 
+      const token = response.token;
 
-      
       login(token);
 
-      
       navigate("/");
     } catch (error) {
       console.error("Erro ao realizar o login", error);
-      
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,7 +80,12 @@ export default function LoginPage() {
               Esqueci minha senha
             </button>
           </div>
-          <Button label="Entrar" icon="pi pi-sign-in" className="w-full mt-4" type="submit" />
+          <Button
+            label={loading ? <ProgressSpinner style={{ width: "25px", height: "25px" }} strokeWidth="5" /> : "Entrar"}
+            icon={loading ? "" : "pi pi-sign-in"}
+            className="w-full mt-4"
+            type="submit"
+          />
         </form>
       </Card>
     </div>
