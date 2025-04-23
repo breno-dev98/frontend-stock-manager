@@ -4,24 +4,35 @@ import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
 import { InputText } from "primereact/inputtext";
+import { actionsButtons } from "../../utils/actionsButtons";
 const MarcasPage = () => {
   const [marcas, setMarcas] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({ nome: "" });
 
-  const actionsButtons = () => {
-    return (
-      <div className="flex gap-3">
-        <i title="Editar" className="pi pi-pencil text-gray-400 hover:text-gray-600 cursor-pointer" onClick={() => alert("Função 'Editar' em desenvolvimento")}></i>
-        <i title="Deletar" className="pi pi-trash text-red-400 hover:text-red-600 cursor-pointer" onClick={() => alert("Função 'Deletar' em desenvolvimento")}></i>
-      </div>
-    );
+  const handleEdit = async (marca) => {
+    setFormData({ nome: marca.nome });
+    setModalVisible(true);    
   };
 
-  const columns = [
-    { field: "nome", header: "Nome" },
-    { field: "acoes", header: "Ações", body: actionsButtons },
-  ]; 
+
+  const handleDelete = async (marca) => {
+    await MarcaService.delete(marca.id)
+    setMarcas((prev) => prev.filter((m) => m.id !== marca.id));
+  };
+
+    const columns = [
+      { field: "nome", header: "Nome" },
+      {
+        field: "acoes",
+        header: "Ações",
+        body: (rowData) =>
+          actionsButtons(rowData, {
+            onEdit: handleEdit,
+            onDelete: handleDelete,
+          }),
+      },
+    ]; 
 
   useEffect(() => {
     const fetchMarcas = async () => {
@@ -59,7 +70,7 @@ const MarcasPage = () => {
         onClick={() => setModalVisible(true)}
       />
 
-      <BaseModal header="Adicionar Marca" visible={modalVisible} onHide={() => setModalVisible(false)} onSave={handleSave}>
+      <BaseModal header={handleEdit ? "Editar Marca":"Adicionar Marca"} visible={modalVisible} onHide={() => {setModalVisible(false); setFormData({nome: ""})}} onSave={handleSave}>
         {/* Conteúdo interno do modal */}
         <InputText onChange={handleInputChange} value={formData.nome} type="text" name="nome" placeholder="Nome da marca" className="w-full border rounded px-2 py-1" />
       </BaseModal>

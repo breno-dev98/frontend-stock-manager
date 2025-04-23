@@ -14,7 +14,7 @@ export class MarcaService {
     static async create(data) {
         try {
             const response = await api.post("/marcas", data);
-            return response.data;
+            return response.data.marcas;
         } catch (error) {
             console.error("Erro ao criar marca:", error);
             throw error;
