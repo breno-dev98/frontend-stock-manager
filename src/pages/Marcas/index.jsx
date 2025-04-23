@@ -8,10 +8,20 @@ const MarcasPage = () => {
   const [marcas, setMarcas] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({ nome: "" });
+
+  const actionsButtons = () => {
+    return (
+      <div className="flex gap-3">
+        <i title="Editar" className="pi pi-pencil text-gray-400 hover:text-gray-600 cursor-pointer" onClick={() => alert("Função 'Editar' em desenvolvimento")}></i>
+        <i title="Deletar" className="pi pi-trash text-red-400 hover:text-red-600 cursor-pointer" onClick={() => alert("Função 'Deletar' em desenvolvimento")}></i>
+      </div>
+    );
+  };
+
   const columns = [
     { field: "nome", header: "Nome" },
-    { field: "acoes", header: "Ações" },
-  ];
+    { field: "acoes", header: "Ações", body: actionsButtons },
+  ]; 
 
   useEffect(() => {
     const fetchMarcas = async () => {
