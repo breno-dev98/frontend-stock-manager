@@ -4,7 +4,9 @@ import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
 import { InputText } from "primereact/inputtext";
-import { actionsButtons } from "../../utils/actionsButtons";
+import { actionsButtons, toastRef } from "../../utils/actionsButtons";
+import { Toast } from "primereact/toast";
+import { ConfirmDialog } from "primereact/confirmdialog";
 const MarcasPage = () => {
   const [marcas, setMarcas] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
@@ -16,7 +18,7 @@ const MarcasPage = () => {
   };
 
 
-  const handleDelete = async (marca) => {
+  const handleDelete = async (marca) => {    
     await MarcaService.delete(marca.id)
     setMarcas((prev) => prev.filter((m) => m.id !== marca.id));
   };
@@ -70,10 +72,28 @@ const MarcasPage = () => {
         onClick={() => setModalVisible(true)}
       />
 
-      <BaseModal header={handleEdit ? "Editar Marca":"Adicionar Marca"} visible={modalVisible} onHide={() => {setModalVisible(false); setFormData({nome: ""})}} onSave={handleSave}>
+      <BaseModal
+        header={formData.nome.trim() !== "" ? "Editar Marca" : "Adicionar Marca"}
+        visible={modalVisible}
+        onHide={() => {
+          setModalVisible(false);
+          setFormData({ nome: "" });
+        }}
+        onSave={handleSave}
+      >
         {/* Conteúdo interno do modal */}
-        <InputText onChange={handleInputChange} value={formData.nome} type="text" name="nome" placeholder="Nome da marca" className="w-full border rounded px-2 py-1" />
+        <InputText
+          onChange={handleInputChange}
+          value={formData.nome}
+          type="text"
+          name="nome"
+          placeholder="Nome da marca"
+          className="w-full border rounded px-2 py-1"
+        />
       </BaseModal>
+
+      <ConfirmDialog />
+      <Toast ref={toastRef} />
     </PagesLayout>
   );
 };
