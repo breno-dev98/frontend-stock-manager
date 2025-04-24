@@ -92,8 +92,8 @@ const MarcasPage = () => {
         />
       </BaseModal>
 
-      <ConfirmDialog />
       <Toast ref={toastRef} />
+      <ConfirmDialog />
     </PagesLayout>
   );
 };
