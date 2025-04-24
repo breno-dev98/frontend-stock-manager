@@ -12,13 +12,22 @@ export const actionsButtons = (rowData, { onEdit, onDelete }) => {
       acceptClassName: "p-button-danger",
       acceptLabel: "Sim",
       rejectLabel: "Cancelar",
-      accept: () => onDelete(rowData),
+      accept: async () => {
+       await onDelete(rowData);
+          toastRef.current?.show({
+            severity: "success",
+            summary: "Confirmado",
+            detail: "Item deletado com sucesso!",
+            life: 2000
+          });
+        
+      },
       reject: () => {
         toastRef.current?.show({
           severity: "info",
           summary: "Cancelado",
           detail: "Ação de exclusão cancelada",
-          life: 3000,
+          life: 2000,
         });
       },
     });
