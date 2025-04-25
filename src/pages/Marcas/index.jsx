@@ -13,6 +13,15 @@ const MarcasPage = () => {
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({ nome: "" });
 
+  useEffect(() => {
+    const fetchMarcas = async () => {
+      const data = await MarcaService.getAll();
+      setMarcas(data.marcas);
+    };
+
+    fetchMarcas();
+  }, []);
+
   const handleEdit = async (marca) => {
     setIsEditing(true)
     setFormData({ id: marca.id, nome: marca.nome });
@@ -38,18 +47,9 @@ const MarcasPage = () => {
       },
     ]; 
 
-  useEffect(() => {
-    const fetchMarcas = async () => {
-      const data = await MarcaService.getAll();
-      setMarcas(data.marcas);
-    };
-
-    fetchMarcas();
-  }, []);
-
   const handleSave = async () => {
     if (isEditing) {
-      const marcaAtualizada = await MarcaService.update(formData.id, {nome: formData.nome});
+      const marcaAtualizada = await MarcaService.update(formData.id, { nome: formData.nome });      
       setMarcas((prev) => prev.map((m) => (m.id === formData.id ? marcaAtualizada : m)));
       setIsEditing(false)
     } else {
