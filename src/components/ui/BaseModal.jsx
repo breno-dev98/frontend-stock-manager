@@ -1,5 +1,6 @@
 import { Dialog } from "primereact/dialog";
 import { Button } from "primereact/button";
+import { Divider } from "primereact/divider";
 
 export default function BaseModal({
   visible,
@@ -9,7 +10,7 @@ export default function BaseModal({
   children, // O conteúdo será passado como children
 }) {
   const footer = (
-    <div className="flex justify-end gap-2 flex-wrap">
+    <div className="flex justify-end gap-2 flex-wrap mt-4">
       <Button label="Cancelar" icon="pi pi-times" className="p-button-text" onClick={onHide} />
       <Button label="Salvar" icon="pi pi-check" onClick={onSave} autoFocus />
     </div>
@@ -23,11 +24,11 @@ export default function BaseModal({
       footer={footer}
       modal
       className="p-fluid sm:w-[65vw] md:w-[65vw] lg:w-[30vw] max-w-[95vw]"
-      contentClassName="!overflow-visible"
+      contentClassName="!overflow-visible border-y border-y-gray-300"
     >
       <form
         onSubmit={(e) => {
-          e.preventDefault(); 
+          e.preventDefault();
           onSave();
         }}
       >

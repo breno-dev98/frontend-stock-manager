@@ -78,7 +78,7 @@ const CategoriasPage = () => {
       />
 
       <BaseModal
-        header={formData.nome.trim() !== "" ? "Editar Categoria" : "Adicionar Categoria"}
+        header={isEditing ? "Editar Categoria" : "Adicionar Categoria"}
         visible={modalVisible}
         onHide={() => {
           setModalVisible(false);
