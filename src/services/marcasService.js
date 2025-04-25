@@ -24,7 +24,7 @@ export class MarcaService {
     static async update(id, data) {
         try {
             const response = await api.put(`/marcas/${id}`, data);
-            return response.data;
+            return response.data.marca;
         } catch (error) {
             console.error(`Erro ao atualizar marca com id ${id}:`, error);
             throw error;

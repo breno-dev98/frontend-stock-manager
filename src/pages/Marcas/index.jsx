@@ -9,12 +9,14 @@ import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 const MarcasPage = () => {
   const [marcas, setMarcas] = useState([]);
+  const [isEditing, setIsEditing] = useState(false)
   const [modalVisible, setModalVisible] = useState(false);
   const [formData, setFormData] = useState({ nome: "" });
 
   const handleEdit = async (marca) => {
-    setFormData({ nome: marca.nome });
-    setModalVisible(true);    
+    setIsEditing(true)
+    setFormData({ id: marca.id, nome: marca.nome });
+    setModalVisible(true);
   };
 
 
@@ -46,10 +48,16 @@ const MarcasPage = () => {
   }, []);
 
   const handleSave = async () => {
-   const novaMarca =  await MarcaService.create(formData);
+    if (isEditing) {
+      const marcaAtualizada = await MarcaService.update(formData.id, {nome: formData.nome});
+      setMarcas((prev) => prev.map((m) => (m.id === formData.id ? marcaAtualizada : m)));
+      setIsEditing(false)
+    } else {
+      const novaMarca =  await MarcaService.create(formData);
+       setMarcas((prev) => [...prev, novaMarca] )
+    }
     setModalVisible(false);
-    setFormData({ nome: "" });
-    setMarcas((prev) => [...prev, novaMarca] )
+    setFormData({ nome: ""});
   };
 
    const handleInputChange = (e) => {
@@ -78,6 +86,7 @@ const MarcasPage = () => {
         onHide={() => {
           setModalVisible(false);
           setFormData({ nome: "" });
+          setIsEditing(false)
         }}
         onSave={handleSave}
       >
@@ -87,6 +96,7 @@ const MarcasPage = () => {
           value={formData.nome}
           type="text"
           name="nome"
+          autoFocus={modalVisible ? true : false}
           placeholder="Nome da marca"
           className="w-full border rounded px-2 py-1"
         />
