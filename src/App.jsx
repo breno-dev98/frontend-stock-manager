@@ -16,13 +16,15 @@ import { useContext } from "react";
 
 const App = () => {
   const { auth } = useContext(AuthContext);
+  
   return (
-      <Routes>
-        {/* ROTAS PÚBLICAS */}
-        <Route path="/login" element={!auth.isAuthenticated && <LoginPage />} />
+    <Routes>
+      {/* ROTAS PÚBLICAS */}
+      <Route path="/login" element={!auth.isAuthenticated && <LoginPage />} />
 
-        {/* ROTAS PRIVADAS */}
-        <Route path="/" element={auth.isAuthenticated && <Layout />}>
+      {/* ROTAS PRIVADAS */}
+      {auth.isAuthenticated && (
+        <Route path="/" element={<Layout />}>
           <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
           <Route path="categorias" element={<CategoriasPage />} />
@@ -32,7 +34,8 @@ const App = () => {
           <Route path="usuarios" element={<UsuariosPage />} />
           <Route path="unidades" element={<UnidadesPage />} />
         </Route>
-      </Routes>
+      )}
+    </Routes>
   );
 };
 

@@ -1,13 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext"; 
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
-import MarcasPage from "../../pages/Marcas";
 
 const Layout = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [collapsed, setCollapsed] = useState(false);
+  const { logout } = useContext(AuthContext);
 
   const menuItems = [
     { label: "Dashboard", icon: "pi pi-gauge", path: "/dashboard" },
@@ -26,9 +27,9 @@ const Layout = () => {
       {/* Header fixo */}
       <header className="w-full h-16 bg-white border-b border-gray-200 flex items-center justify-between px-6 shadow z-10">
         <h1 className="text-xl font-bold">Stock Manager</h1>
-        <div>
+        <div className="flex gap-4 items-center">
           <h1 className="text-xl">Olá, Administrador</h1>
-          
+          <i title="Logout" className="pi pi-sign-out cursor-pointer" onClick={logout}></i>
         </div>
         {/* Você pode colocar perfil, logout, etc aqui */}
       </header>
