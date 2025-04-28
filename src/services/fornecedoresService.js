@@ -16,7 +16,14 @@ export class FornecedorService {
             const response = await api.post("/fornecedores", data);
             return response.data;
         } catch (error) {
-            console.error("Erro ao criar fornecedor:", error);
+            const errors = error.response?.data?.errors;
+            if (errors) {
+                errors.forEach(err => {
+                    console.log(`Erro no campo ${err.path}: ${err.message}`);
+                });
+            } else {
+                console.error("Erro inesperado", error);
+            }
             throw error;
         }
     }
@@ -26,7 +33,14 @@ export class FornecedorService {
             const response = await api.put(`/fornecedores/${id}`, data);
             return response.data;
         } catch (error) {
-            console.error(`Erro ao atualizar fornecedores com id ${id}:`, error);
+            const errors = error.response?.data?.errors;
+            if (errors) {
+                errors.forEach(err => {
+                    console.log(`Erro no campo ${err.path}: ${err.message}`);
+                });
+            } else {
+                console.error("Erro inesperado", error);
+            }
             throw error;
         }
     }

@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { FornecedorService } from "../../services/fornecedoresService";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { fornecedorSchema } from "../../schemas/fornecedorSchema";
 import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
@@ -8,14 +11,28 @@ import { InputMask } from "primereact/inputmask";
 import { actionsButtons, toastRef } from "../../utils/actionsButtons";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { removeMascara } from "../../utils/removerMascara"
+import { removeMascara } from "../../utils/removerMascara";
 import { formatarCNPJ, formatarTelefone } from "../../utils/masks";
 
 const FornecedoresPage = () => {
   const [fornecedores, setFornecedores] = useState([]);
-  const [formData, setFormData] = useState({ nome: "", cnpj: null, telefone: null, email: "" });
   const [isEditing, setIsEditing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(fornecedorSchema),
+    defaultValues: {
+      nome: "",
+      cnpj: null,
+      telefone: null,
+      email: "",
+    },
+  });
 
   useEffect(() => {
     const fetchFornecedores = async () => {
@@ -27,8 +44,7 @@ const FornecedoresPage = () => {
 
   const handleEdit = (fornecedor) => {
     setIsEditing(true);
-    setFormData({
-      id: fornecedor.id,
+    reset({
       nome: fornecedor.nome,
       cnpj: fornecedor.cnpj,
       telefone: fornecedor.telefone,
@@ -42,31 +58,31 @@ const FornecedoresPage = () => {
     setFornecedores((prev) => prev.filter((f) => f.id !== fornecedor.id));
   };
 
-  const handleSave = async () => {
+  const handleSave = async (data) => {
     const dadosLimpos = {
-      ...formData,
-      cnpj: removeMascara(formData.cnpj),
-      telefone: removeMascara(formData.telefone),
+      ...data,
+      cnpj: removeMascara(data.cnpj),
+      telefone: removeMascara(data.telefone),
     };
     if (isEditing) {
-      const fornecedorAtualizado = await FornecedorService.update(formData.id, dadosLimpos);
-      setFornecedores((prev) => prev.map((f) => (f.id === formData.id ? fornecedorAtualizado.fornecedor : f)));
+      const fornecedorAtualizado = await FornecedorService.update(data.id, dadosLimpos);
+      setFornecedores((prev) => prev.map((f) => (f.id === data.id ? fornecedorAtualizado.fornecedor : f)));
       setIsEditing(false);
     } else {
       const novoFornecedor = await FornecedorService.create(dadosLimpos);
       setFornecedores((prev) => [...prev, novoFornecedor.fornecedor]);
+      setModalVisible(false);
+      reset()
     }
-    setModalVisible(false);
-    setFormData({ nome: "", cnpj: null, telefone: null, email: "" });
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
-  };
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    if (isEditing) {
+    setIsEditing(false);
+    }
+    reset();
+  }
 
   const columns = [
     { field: "nome", header: "Nome" },
@@ -98,46 +114,48 @@ const FornecedoresPage = () => {
       <BaseModal
         header={isEditing ? "Editar Fornecedor" : "Adicionar Fornecedor"}
         visible={modalVisible}
-        onHide={() => {
-          setModalVisible(false);
-          setFormData({
-            nome: "",
-            cnpj: null,
-            telefone: null,
-            email: "",
-          });
-          setIsEditing(false);
-        }}
-        onSave={handleSave}
+        onHide={handleCloseModal}
+        onSubmit={handleSubmit(handleSave)}
       >
         <div className="flex flex-col gap-2">
-          <InputText
-            onChange={handleInputChange}
-            value={formData.nome}
-            type="text"
+          <Controller
             name="nome"
-            autoComplete="off"
-            autoFocus={modalVisible ? true : false}
-            placeholder="Nome do fornecedor"
-            className="w-full border rounded px-2 py-1"
+            control={control}
+            render={({ field }) => (
+              <InputText
+                {...field}
+                placeholder="Nome do fornecedor"
+                className="w-full border rounded px-2 py-1"
+                invalid={errors.nome ? true : false}
+              />
+            )}
           />
-          <InputMask
-            mask="99.999.999/9999-99"
+          {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
+
+          <Controller
             name="cnpj"
-            value={formData.cnpj}
-            onChange={handleInputChange}
-            placeholder={"CNPJ"}
-            className="w-full"
+            control={control}
+            render={({ field }) => (
+              <InputMask mask="99.999.999/9999-99" {...field} placeholder="CNPJ" className="w-full" invalid={errors.cnpj ? true : false} />
+            )}
           />
-          <InputMask
+          {errors.cnpj && <span className="text-red-500">{errors.cnpj.message}</span>}
+
+          <Controller
             name="telefone"
-            value={formData.telefone}
-            onChange={handleInputChange}
-            mask="(99) 99999-9999"
-            placeholder="Telefone"
-            className="w-full"
+            control={control}
+            render={({ field }) => (
+              <InputMask mask="(99) 99999-9999" {...field} placeholder="Telefone" className="w-full" invalid={errors.telefone ? true : false} />
+            )}
           />
-          <InputText name="email" value={formData.email} onChange={handleInputChange} placeholder="E-mail" className="w-full" />
+          {errors.telefone && <span className="text-red-500">{errors.telefone.message}</span>}
+
+          <Controller
+            name="email"
+            control={control}
+            render={({ field }) => <InputText {...field} placeholder="E-mail" className="w-full" invalid={errors.email ? true : false} />}
+          />
+          {errors.email && <span className="text-red-500">{errors.email.message}</span>}
         </div>
       </BaseModal>
 
