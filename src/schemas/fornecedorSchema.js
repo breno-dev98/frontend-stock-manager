@@ -10,7 +10,7 @@ export const fornecedorSchema = z.object({
     cnpj: z.string({
         required_error: "O campo CNPJ é obrigatório",
         invalid_type_error: "O campo CNPJ deve ser apenas números",
-    }).min(18, "CNPJ deve ter no mínimo 14 caracteres").max(18, "CNPJ inválido"),
+    }).min(14, "CNPJ deve ter no mínimo 14 caracteres").max(14, "CNPJ inválido"),
 
 
     telefone: z.string({

@@ -17,6 +17,7 @@ import { formatarCNPJ, formatarTelefone } from "../../utils/masks";
 const FornecedoresPage = () => {
   const [fornecedores, setFornecedores] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [editId, setEditId] = useState(null)
   const [modalVisible, setModalVisible] = useState(false);
 
   const {
@@ -43,7 +44,8 @@ const FornecedoresPage = () => {
   }, []);
 
   const handleEdit = (fornecedor) => {
-    setIsEditing(true);
+    setEditId(fornecedor.id);
+    setIsEditing(true);    
     reset({
       nome: fornecedor.nome,
       cnpj: fornecedor.cnpj,
@@ -58,30 +60,31 @@ const FornecedoresPage = () => {
     setFornecedores((prev) => prev.filter((f) => f.id !== fornecedor.id));
   };
 
-  const handleSave = async (data) => {
+  const handleSave = async (data) => {    
     const dadosLimpos = {
       ...data,
       cnpj: removeMascara(data.cnpj),
       telefone: removeMascara(data.telefone),
     };
+    
     if (isEditing) {
-      const fornecedorAtualizado = await FornecedorService.update(data.id, dadosLimpos);
-      setFornecedores((prev) => prev.map((f) => (f.id === data.id ? fornecedorAtualizado.fornecedor : f)));
-      setIsEditing(false);
-    } else {
+      const fornecedorAtualizado = await FornecedorService.update(editId, dadosLimpos);      
+      setFornecedores((prev) => prev.map((f) => (f.id === editId ? fornecedorAtualizado.fornecedor : f)));
+      handleCloseModal()
+    } else {      
       const novoFornecedor = await FornecedorService.create(dadosLimpos);
       setFornecedores((prev) => [...prev, novoFornecedor.fornecedor]);
-      setModalVisible(false);
-      reset()
+      handleCloseModal()
     }
   };
 
   const handleCloseModal = () => {
+    setEditId(null)
     setModalVisible(false);
     if (isEditing) {
     setIsEditing(false);
     }
-    reset();
+    reset({nome: "", cnpj: null, email: "", telefone: null});
   }
 
   const columns = [
@@ -136,7 +139,7 @@ const FornecedoresPage = () => {
             name="cnpj"
             control={control}
             render={({ field }) => (
-              <InputMask mask="99.999.999/9999-99" {...field} placeholder="CNPJ" className="w-full" invalid={errors.cnpj ? true : false} />
+              <InputMask mask="99.999.999/9999-99" {...field} placeholder="CNPJ" value={null ? "" : field.value} className="w-full" invalid={errors.cnpj ? true : false} />
             )}
           />
           {errors.cnpj && <span className="text-red-500">{errors.cnpj.message}</span>}
