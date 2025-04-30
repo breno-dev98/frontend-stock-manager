@@ -11,10 +11,11 @@ import { InputMask } from "primereact/inputmask";
 import { actionsButtons, toastRef } from "../../utils/actionsButtons";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
-import { removeMascara } from "../../utils/removerMascara";
 import { formatarCNPJ, formatarTelefone } from "../../utils/masks";
+import { useToastMessage } from "../../hooks/useToastMessage";
 
 const FornecedoresPage = () => {
+  const { toastRef, showSuccess } = useToastMessage();
   const [fornecedores, setFornecedores] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null)
@@ -61,20 +62,17 @@ const FornecedoresPage = () => {
   };
 
   const handleSave = async (data) => {    
-    const dadosLimpos = {
-      ...data,
-      cnpj: removeMascara(data.cnpj),
-      telefone: removeMascara(data.telefone),
-    };
     
     if (isEditing) {
-      const fornecedorAtualizado = await FornecedorService.update(editId, dadosLimpos);      
+      const fornecedorAtualizado = await FornecedorService.update(editId, data);      
       setFornecedores((prev) => prev.map((f) => (f.id === editId ? fornecedorAtualizado.fornecedor : f)));
       handleCloseModal()
+      showSuccess("Atualização realizada com sucesso!");
     } else {      
-      const novoFornecedor = await FornecedorService.create(dadosLimpos);
+      const novoFornecedor = await FornecedorService.create(data);
       setFornecedores((prev) => [...prev, novoFornecedor.fornecedor]);
       handleCloseModal()
+      showSuccess("Cadastro realizado com sucesso!");
     }
   };
 
