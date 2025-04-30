@@ -1,6 +1,5 @@
 // src/App.jsx
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import AuthProvider from "./context/authContext";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Layout from "./components/Layout/MainLayout";
 import MarcasPage from "./pages/Marcas";
 import CategoriasPage from "./pages/Categorias";
@@ -11,19 +10,18 @@ import FornecedoresPage from "./pages/Fornecedores";
 import UnidadesPage from "./pages/Unidades";
 import UsuariosPage from "./pages/Usuarios";
 import LoginPage from "./pages/Login";
-import { AuthContext } from "./context/authContext";
-import { useContext } from "react";
+import PrivateRoute from "./routes/PrivateRoute";
 
 const App = () => {
-  const { auth } = useContext(AuthContext);
+
   
   return (
     <Routes>
       {/* ROTAS PÚBLICAS */}
-      <Route path="/login" element={!auth.isAuthenticated && <LoginPage />} />
+      <Route path="/login" element={<LoginPage />} />
 
       {/* ROTAS PRIVADAS */}
-      {auth.isAuthenticated && (
+      <Route element={<PrivateRoute />}>
         <Route path="/" element={<Layout />}>
           <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
@@ -34,7 +32,9 @@ const App = () => {
           <Route path="usuarios" element={<UsuariosPage />} />
           <Route path="unidades" element={<UnidadesPage />} />
         </Route>
-      )}
+      </Route>
+
+      <Route path="*" element={<Navigate to="/login" />} />
     </Routes>
   );
 };

@@ -1,6 +1,5 @@
 import { createContext, useEffect, useState } from "react";
 import { jwtDecode } from "jwt-decode";
-import { useLocation, useNavigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 function AuthProvider({ children }) {
@@ -8,9 +7,6 @@ function AuthProvider({ children }) {
     isAuthenticated: false,
     token: null,
   });
-
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const isTokenExpired = (token) => {
     try {
@@ -22,25 +18,11 @@ function AuthProvider({ children }) {
     }
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      if (isTokenExpired(token)) {
-        logout();
-      } else {
-        setAuth({
-          isAuthenticated: true,
-          token: token,
-        });
-      }
-    }
-  }, []);
-
   const checkToken = () => {
     const token = localStorage.getItem("token");
 
     if (!token || isTokenExpired(token)) {
-      logout(); // Redireciona para login se não tiver token ou estiver expirado
+      logout(); 
     } else {
       setAuth({
         isAuthenticated: true,
@@ -52,10 +34,6 @@ function AuthProvider({ children }) {
    useEffect(() => {
      checkToken(); // Verifica na primeira montagem
    }, []);
-
-   useEffect(() => {
-     checkToken(); // Verifica sempre que a rota mudar
-   }, [location]);
 
   const login = (token) => {
     localStorage.setItem("token", token); // Armazena o token no localStorage
@@ -71,7 +49,6 @@ function AuthProvider({ children }) {
       isAuthenticated: false,
       token: null,
     });
-    navigate("/login");
   };
 
   return <AuthContext.Provider value={{ auth, login, logout }}>{children}</AuthContext.Provider>;
