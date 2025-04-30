@@ -7,7 +7,7 @@ function AuthProvider({ children }) {
     isAuthenticated: false,
     token: null,
   });
-
+const [loading, setLoading] = useState(true);
   const isTokenExpired = (token) => {
     try {
       const { exp } = jwtDecode(token);
@@ -29,6 +29,7 @@ function AuthProvider({ children }) {
         token: token,
       });
     }
+    setLoading(false)
   };
 
    useEffect(() => {
@@ -51,7 +52,7 @@ function AuthProvider({ children }) {
     });
   };
 
-  return <AuthContext.Provider value={{ auth, login, logout }}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={{ auth, login, logout, loading }}>{children}</AuthContext.Provider>;
 }
 
 export default AuthProvider;
