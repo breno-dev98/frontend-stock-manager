@@ -3,7 +3,7 @@ import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 
-export default function BaseTable({ data = [], columns = [], headerTitle = "Table", emptyMessage = "Nenhum item encontrado", buttonLabel = "Button", onClick = () => alert("Insira sua função aqui") }) {
+export default function BaseTable({ data = [], columns = [], headerTitle = "Table", sortable = false, emptyMessage = "Nenhum item encontrado", buttonLabel = "Button", onClick = () => alert("Insira sua função aqui") }) {
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h1 className="md:text-xl sm:text-md text-md text-900 font-bold">{headerTitle}</h1>
@@ -17,7 +17,7 @@ export default function BaseTable({ data = [], columns = [], headerTitle = "Tabl
     <div className="border border-gray-400 rounded-lg mt-4 overflow-hidden">
           <DataTable value={data} header={header} footer={footer} emptyMessage={emptyMessage} tableStyle={{ minWidth: "60rem" }}>
         {columns.map((col, index) => (
-          <Column key={index} field={col.field} header={col.header} body={col.body} />
+          <Column key={index} field={col.field} sortable={col.field === "acoes" ? false : sortable} header={col.header} body={col.body} />
         ))}
       </DataTable>
     </div>

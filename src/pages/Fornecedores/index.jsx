@@ -15,7 +15,7 @@ import { formatarCNPJ, formatarTelefone } from "../../utils/masks";
 import { useToastMessage } from "../../hooks/useToastMessage";
 
 const FornecedoresPage = () => {
-  const { toastRef, showSuccess } = useToastMessage();
+  const { toastRef, showSuccess, showError } = useToastMessage();
   const [fornecedores, setFornecedores] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [editId, setEditId] = useState(null)
@@ -58,21 +58,34 @@ const FornecedoresPage = () => {
 
   const handleDelete = async (fornecedor) => {
     await FornecedorService.delete(fornecedor.id);
+    showSuccess("Item deletado com sucesso!")
     setFornecedores((prev) => prev.filter((f) => f.id !== fornecedor.id));
   };
 
   const handleSave = async (data) => {    
+
+    
     
     if (isEditing) {
-      const fornecedorAtualizado = await FornecedorService.update(editId, data);      
-      setFornecedores((prev) => prev.map((f) => (f.id === editId ? fornecedorAtualizado.fornecedor : f)));
-      handleCloseModal()
-      showSuccess("Atualização realizada com sucesso!");
+      try {
+        const fornecedorAtualizado = await FornecedorService.update(editId, data);
+        handleCloseModal();
+        setFornecedores((prev) => prev.map((f) => (f.id === editId ? fornecedorAtualizado.fornecedor : f)));
+        showSuccess("Atualização realizada com sucesso!");
+      } catch (error) {
+        handleCloseModal();
+        showError("Erro ao atualizar o fornecedor")
+      }
+      
     } else {      
-      const novoFornecedor = await FornecedorService.create(data);
-      setFornecedores((prev) => [...prev, novoFornecedor.fornecedor]);
-      handleCloseModal()
-      showSuccess("Cadastro realizado com sucesso!");
+      try {
+        const novoFornecedor = await FornecedorService.create(data);
+        setFornecedores((prev) => [...prev, novoFornecedor.fornecedor]);
+        handleCloseModal();
+        showSuccess("Cadastro realizado com sucesso!");
+      } catch (error) {
+        showError("Erro ao cadastrar Fornecedor")
+      }
     }
   };
 
@@ -107,6 +120,7 @@ const FornecedoresPage = () => {
         data={fornecedores}
         columns={columns}
         buttonLabel="Novo Fornecedor"
+        sortable
         emptyMessage="Nenhum fornecedor encontrado"
         headerTitle="Lista de Fornecedores"
         onClick={() => setModalVisible(true)}
