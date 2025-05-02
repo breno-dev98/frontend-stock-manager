@@ -8,7 +8,7 @@ import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
 import { InputText } from "primereact/inputtext";
 import { InputMask } from "primereact/inputmask";
-import { actionsButtons, toastRef } from "../../utils/actionsButtons";
+import { actionsButtons } from "../../utils/actionsButtons";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
 import { formatarCNPJ, formatarTelefone } from "../../utils/masks";

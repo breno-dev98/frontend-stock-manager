@@ -1,6 +1,5 @@
 // src/hooks/useToastMessage.js
 import { useRef } from "react";
-import { Toast } from "primereact/toast";
 
 export const useToastMessage = () => {
   const toastRef = useRef(null);

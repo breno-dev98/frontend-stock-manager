@@ -7,14 +7,17 @@ import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
 import { InputText } from "primereact/inputtext";
-import { actionsButtons, toastRef } from "../../utils/actionsButtons";
+import { actionsButtons } from "../../utils/actionsButtons";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { useToastMessage } from "../../hooks/useToastMessage";
 
 const MarcasPage = () => {
+  const {toastRef, showSuccess, showError} = useToastMessage()
   const [marcas, setMarcas] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [editId, setEditId] = useState(null);
 
   const {
     control,
@@ -36,6 +39,7 @@ const MarcasPage = () => {
   }, []);
 
   const handleEdit = async (marca) => {
+    setEditId(marca.id)
     setIsEditing(true);
     reset({
       nome: marca.nome,
@@ -46,6 +50,7 @@ const MarcasPage = () => {
   const handleDelete = async (marca) => {
     await MarcaService.delete(marca.id);
     setMarcas((prev) => prev.filter((m) => m.id !== marca.id));
+    showSuccess("Item deletado com sucesso!")
   };
 
   const columns = [
@@ -63,20 +68,33 @@ const MarcasPage = () => {
 
   const handleSave = async (data) => {
     if (isEditing) {
-      const marcaAtualizada = await MarcaService.update(data.id, { nome: data.nome });
-      setMarcas((prev) => prev.map((m) => (m.id === data.id ? marcaAtualizada : m)));
-      setIsEditing(false);
+      try {
+        const marcaAtualizada = await MarcaService.update(editId, data);
+        setMarcas((prev) => prev.map((m) => (m.id === editId ? marcaAtualizada : m)));
+        setIsEditing(false);
+        handleCloseModal();
+        showSuccess("Atualização realizada com sucesso!")
+      } catch (error) {
+        showError("Erro ao atualizar marca")
+      }
+      
     } else {
-      const novaMarca = await MarcaService.create(data);
-      setMarcas((prev) => [...prev, novaMarca]);
+      try {
+        const novaMarca = await MarcaService.create(data);
+        setMarcas((prev) => [...prev, novaMarca]);
+        handleCloseModal();
+        showSuccess("Cadastro realizado com sucesso!")
+      } catch (error) {
+        showError("Erro ao cadastrar marca")
+        handleCloseModal()
+      }
     }
     setModalVisible(false);
-    setFormData({ nome: "" });
   };
 
   const handleCloseModal = () => {
     setModalVisible(false);
-    reset({nome: ""})
+    reset({ nome: "" });
     if (isEditing) {
       setIsEditing(false);
     }
