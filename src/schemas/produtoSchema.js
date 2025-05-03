@@ -1,4 +1,6 @@
 import { z } from "zod";
+import { removeMascaraNumerica } from "../utils/removerMascara";
+
 
 export const produtoSchema = z.object({
     nome: z
@@ -13,13 +15,19 @@ export const produtoSchema = z.object({
         .or(z.literal("")),
 
     preco_custo: z
-        .string()
+        .number({
+            required_error: "O preço de custo é obrigatório",
+            invalid_type_error: "O preço de custo deve ser um número",
+        })
         .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
             message: "O preço de custo deve ser um número positivo",
         }),
 
     preco_venda: z
-        .string()
+        .number({
+            required_error: "O preço de venda é obrigatório",
+            invalid_type_error: "O preço de venda deve ser um número",
+        })
         .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
             message: "O preço de venda deve ser um número positivo",
         }),
@@ -37,26 +45,24 @@ export const produtoSchema = z.object({
     marca_id: z.string().uuid().nullable().or(z.literal("")).optional(),
     categoria_id: z.string().uuid().nullable().or(z.literal("")).optional(),
     fornecedor_id: z.string().uuid().nullable().or(z.literal("")).optional(),
-
-    user_id: z.string().uuid({ message: "ID do usuário é obrigatório" }),
 })
-    .refine((data) => {
-        if (Number(data.preco_venda) < Number(data.preco_custo)) {
-            return false;
-        }
-        return true;
-    }, {
-        message: "O preço de venda deve ser maior que o preço de custo",
-        path: ["preco_venda"],
-    })
     .refine((data) => {
         const unidadesInteiras = ["UNIDADE", "PC", "CX"];
         const isDecimal = !Number.isInteger(Number(data.quantidade));
+
         if (unidadesInteiras.includes(data.unidade_medida) && isDecimal) {
             return false;
         }
+
+        if (data.unidade_medida === "KG") {
+            const partes = String(data.quantidade).split(".");
+            if (partes[1] && partes[1].length > 3) {
+                return false;
+            }
+        }
+
         return true;
     }, {
-        message: "A unidade selecionada não permite valor com casas decimais",
+        message: "A quantidade informada é inválida para a unidade selecionada",
         path: ["quantidade"],
-    });
+    })

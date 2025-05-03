@@ -38,12 +38,14 @@ const ProdutosPage = () => {
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(produtoSchema),
     defaultValues: { nome: "", descricao: "", preco_custo: "", preco_venda: "", quantidade: 0, unidade_medida: "", marca_id: "", categoria_id: "", fornecedor_id: "" },
   });
 
+  const unidade = watch("unidade_medida")
   useEffect(() => {
     const fetFornecedores = async () => {
       const data = await FornecedorService.getAll();      
@@ -59,6 +61,8 @@ const ProdutosPage = () => {
     };
     const fetchProdutos = async () => {
       const data = await ProdutoService.getAll();
+      console.log(data.produtos);
+      
       setProdutos(data.produtos);
     };
     fetFornecedores();
@@ -67,11 +71,20 @@ const ProdutosPage = () => {
     fetchProdutos();
   }, []);
 
-  const handleEdit = async (produto) => {
+  const handleEdit = async (produto) => {    
     setEditId(produto.id);
     setIsEditing(true);
     reset({
       nome: produto.nome,
+      descricao: produto.descricao,
+      categoria_id: produto.categoria_id,
+      marca_id: produto.marca_id,
+      fornecedor_id: produto.fornecedor_id,
+      preco_custo: produto.preco_custo,
+      preco_venda: produto.preco_venda,
+      quantidade: produto.quantidade,
+      unidade_medida: produto.unidade_medida,
+
     });
     setModalVisible(true);
   };
@@ -84,7 +97,21 @@ const ProdutosPage = () => {
 
   const columns = [
     { field: "nome", header: "Nome" },
-    { field: "descricao", header: "Descrição" },
+    { field: "descricao", header: "Descrição", body: (rowData) => (rowData.descricao === null ? "-" : rowData.descricao) },
+    {
+      field: "marca",
+      header: "Marca",
+      body: (rowData) => marcas.find((c) => c.id === rowData.marca_id)?.nome || "-",
+    },
+    {
+      field: "categoria",
+      header: "Categoria",
+      body: (rowData) => categorias.find((c) => c.id === rowData.categoria_id)?.nome || "-",
+    },{
+      field: "fornecedor",
+      header: "Fornecedor",
+      body: (rowData) => fornecedores.find((c) => c.id === rowData.fornecedor_id)?.nome || "-",
+    },
     { field: "preco_custo", header: "Preço Custo" },
     { field: "preco_venda", header: "Preço Venda" },
     { field: "quantidade", header: "Quantidade" },
@@ -139,6 +166,8 @@ const ProdutosPage = () => {
         data={produtos}
         columns={columns}
         buttonLabel="Novo Produto"
+        sortable
+        sortMode="multiple"
         emptyMessage="Nenhum produto encontrado"
         headerTitle="Lista de Produtos"
         onClick={() => setModalVisible(true)}
@@ -229,7 +258,9 @@ const ProdutosPage = () => {
             <InputText
               {...field}
               type="number"
-              step="0.001"
+              mode="decimal"
+              minFractionDigits={field.value && unidade === "KG" ? 3 : 0}
+              maxFractionDigits={field.value && unidade === "KG" ? 3 : 0}
               placeholder="Quantidade"
               className="w-full border rounded"
               invalid={!!errors.quantidade}
