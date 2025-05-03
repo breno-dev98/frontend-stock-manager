@@ -12,13 +12,13 @@ export const fornecedorSchema = z.object({
     cnpj: z.string({
         required_error: "O campo CNPJ é obrigatório",
         invalid_type_error: "O campo CNPJ deve ser apenas números",
-    }).transform(removeMascara).refine((val) => val.length === 14, { message: "CNPJ deve ter exatamente 14 dígitos" }).trim(),
+    }).transform(removeMascara).refine((val) => val.length === 14, { message: "CNPJ deve ter exatamente 14 dígitos" }),
 
 
     telefone: z.string({
         required_error: "O campo telefone é obrigatório",
         invalid_type_error: "O campo telefone deve ser apenas números",
-    }).transform(removeMascara).refine((val) => val.length === 11, { message: "Telefone deve ter exatamente 11 dígitos" }).trim(),
+    }).transform(removeMascara).refine((val) => val.length === 11, { message: "Telefone deve ter exatamente 11 dígitos" }),
 
 
     email: z.string({
