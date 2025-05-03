@@ -1,17 +1,33 @@
 import { useEffect, useState } from "react";
-import { CategoriaService } from "../../services/categoriasService"
+import { CategoriaService } from "../../services/categoriasService";
 import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
 import BaseModal from "../../components/ui/BaseModal";
 import { InputText } from "primereact/inputtext";
-import { actionsButtons, toastRef } from "../../utils/actionsButtons";
+import { actionsButtons } from "../../utils/actionsButtons";
 import { Toast } from "primereact/toast";
 import { ConfirmDialog } from "primereact/confirmdialog";
+import { useForm, Controller } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { categoriaSchema } from "../../schemas/categoriaSchema";
+import { useToastMessage } from "../../hooks/useToastMessage";
+
 const CategoriasPage = () => {
   const [categorias, setCategorias] = useState([]);
-  const [formData, setFormData] = useState({ nome: "" })
   const [isEditing, setIsEditing] = useState(false);
-  const [modalVisible, setModalVisible] = useState(false)
+  const [editId, setEditId] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const { toastRef, showSuccess, showError } = useToastMessage();
+
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(categoriaSchema),
+    defaultValues: { nome: "" },
+  });
 
   useEffect(() => {
     const fetchCategorias = async () => {
@@ -21,56 +37,68 @@ const CategoriasPage = () => {
     fetchCategorias();
   }, []);
 
-   const handleEdit = async (categoria) => {
-     setIsEditing(true);
-     setFormData({ id: categoria.id, nome: categoria.nome });
-     setModalVisible(true);
-   };
-  
-  const handleDelete = async (categoria) => {    
-      await CategoriaService.delete(categoria.id)
-      setCategorias((prev) => prev.filter((c) => c.id !== categoria.id));
-    };
-
-  const columns = [
-        { field: "nome", header: "Nome" },
-        {
-          field: "acoes",
-          header: "Ações",
-          body: (rowData) =>
-            actionsButtons(rowData, {
-              onEdit: handleEdit,
-              onDelete: handleDelete,
-            }),
-        },
-      ]; 
-  
-  const handleSave = async () => {
-      if (isEditing) {
-        const categoriaAtualizada = await CategoriaService.update(formData.id, { nome: formData.nome });        
-        setCategorias((prev) => prev.map((m) => (m.id === formData.id ? categoriaAtualizada.category : m)));
-        setIsEditing(false)
-      } else {
-        const novaCategoria =  await CategoriaService.create(formData);
-         setCategorias((prev) => [...prev, novaCategoria.category] )
-      }
-      setModalVisible(false);
-      setFormData({ nome: ""});
+  const handleEdit = async (categoria) => {
+    setEditId(categoria.id);
+    setIsEditing(true);
+    reset({
+      nome: categoria.nome,
+    });
+    setModalVisible(true);
   };
 
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
-    };
+  const handleDelete = async (categoria) => {
+    await CategoriaService.delete(categoria.id);
+    setCategorias((prev) => prev.filter((c) => c.id !== categoria.id));
+    showSuccess("Item deletado com sucesso!");
+  };
+
+  const columns = [
+    { field: "nome", header: "Nome" },
+    {
+      field: "acoes",
+      header: "Ações",
+      body: (rowData) =>
+        actionsButtons(rowData, {
+          onEdit: handleEdit,
+          onDelete: handleDelete,
+        }),
+    },
+  ];
+
+  const handleSave = async (data) => {
+    try {
+      if (isEditing) {
+        const categoriaAtualizada = await CategoriaService.update(editId, data);
+        setCategorias((prev) => prev.map((m) => (m.id === editId ? categoriaAtualizada.category : m)));
+        setIsEditing(false);
+        showSuccess("Categoria atualizada com sucesso!");
+      } else {
+        const novaCategoria = await CategoriaService.create(data);
+        setCategorias((prev) => [...prev, novaCategoria.category]);
+        showSuccess("Categoria criada com sucesso!");
+      }
+      handleCloseModal();
+    } catch (error) {
+      if (isEditing) {
+        showError("Erro ao atualizar categoria");
+      } else {
+        showError("Erro ao salvar categoria");
+      }
+    }
+  };
+
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    reset({ nome: "" });
+    setIsEditing(false);
+  };
 
   return (
     <PagesLayout title="Gerenciamento de Categorias">
       <BaseTable
         data={categorias}
         columns={columns}
+        sortable
         buttonLabel="Nova Categoria"
         emptyMessage="Nenhuma categoria encontrada"
         headerTitle="Lista de Categorias"
@@ -80,24 +108,26 @@ const CategoriasPage = () => {
       <BaseModal
         header={isEditing ? "Editar Categoria" : "Adicionar Categoria"}
         visible={modalVisible}
-        onHide={() => {
-          setModalVisible(false);
-          setFormData({ nome: "" });
-          setIsEditing(false);
-        }}
-        onSave={handleSave}
+        onHide={handleCloseModal}
+        onSubmit={handleSubmit(handleSave)}
       >
-
-        <InputText
-          onChange={handleInputChange}
-          value={formData.nome}
-          type="text"
+        <Controller
           name="nome"
-          autoComplete="off"
-          autoFocus={modalVisible ? true : false}
-          placeholder="Nome da categoria"
-          className="w-full border rounded px-2 py-1"
+          control={control}
+          render={({ field }) => (
+            <InputText
+              {...field}
+              type="text"
+              name="nome"
+              autoComplete="off"
+              autoFocus={modalVisible ? true : false}
+              placeholder="Nome da categoria"
+              className="w-full border rounded px-2 py-1"
+              invalid={errors.nome ? true : false}
+            />
+          )}
         />
+        {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
       </BaseModal>
 
       <Toast ref={toastRef} />

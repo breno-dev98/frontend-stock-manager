@@ -1,5 +1,4 @@
 import { confirmDialog } from "primereact/confirmdialog";
-import { Toast } from "primereact/toast";
 import { createRef } from "react";
 export const toastRef = createRef();
 
