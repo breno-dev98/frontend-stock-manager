@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CategoriaService } from "../../services/categoriasService";
 import PagesLayout from "../../components/Layout/PagesLayout";
 import BaseTable from "../../components/ui/BaseTable";
@@ -18,6 +18,7 @@ const CategoriasPage = () => {
   const [editId, setEditId] = useState(null);
   const [modalVisible, setModalVisible] = useState(false);
   const { toastRef, showSuccess, showError } = useToastMessage();
+  const inputRef = useRef(null)
 
   const {
     control,
@@ -119,6 +120,7 @@ const CategoriasPage = () => {
               {...field}
               type="text"
               name="nome"
+              ref={inputRef}
               autoComplete="off"
               autoFocus={modalVisible ? true : false}
               placeholder="Nome da categoria"

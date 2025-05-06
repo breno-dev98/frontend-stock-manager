@@ -8,6 +8,15 @@ export function formatarTelefone(telefone) {
   return telefone.replace(/^(\d{2})(\d{5})(\d{4})$/, "($1) $2-$3");
 }
 
-export function formatarMoeda (value) {
-  return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
-};
+export function formatarMoeda(value) {
+  const numero = Number(value);
+
+  if (isNaN(numero)) return "R$ 0,00"; // fallback
+
+  return numero.toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
+
+

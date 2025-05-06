@@ -1,6 +1,4 @@
 import { z } from "zod";
-import { removeMascaraNumerica } from "../utils/removerMascara";
-
 
 export const produtoSchema = z.object({
     nome: z
@@ -11,6 +9,7 @@ export const produtoSchema = z.object({
     descricao: z
         .string()
         .max(500, "A descrição deve ter no máximo 500 caracteres")
+        .nullable()
         .optional()
         .or(z.literal("")),
 

@@ -14,7 +14,7 @@ export default function BaseModal({
       visible={visible}
       onHide={onHide}
       modal
-      className="p-fluid sm:w-[65vw] md:w-[65vw] lg:w-[30vw] max-w-[95vw]"
+      className="p-fluid sm:w-[80vw] md:w-[70vw] lg:w-[30vw] max-w-[95vw]"
       contentClassName="!overflow-visible border-y border-y-gray-300"
     >
       <form onSubmit={onSubmit}>
