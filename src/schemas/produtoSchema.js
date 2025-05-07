@@ -30,9 +30,8 @@ export const produtoSchema = z.object({
         .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
             message: "O preço de venda deve ser um número positivo",
         }),
-
     quantidade: z
-        .string()
+        .number()
         .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
             message: "A quantidade deve ser um número positivo",
         }),

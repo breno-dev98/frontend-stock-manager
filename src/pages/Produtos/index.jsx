@@ -115,7 +115,7 @@ const ProdutosPage = () => {
       header: "Fornecedor",
       body: (rowData) => fornecedores.find((c) => c.id === rowData.fornecedor_id)?.nome || "-",
     },
-    { field: "ean", header: "EAN" },
+    { field: "ean", header: "EAN", body: (rowData) => rowData.ean || "-" },
     { field: "preco_custo", header: "Preço Custo", body: (rowData) => formatarMoeda(rowData.preco_custo) },
     { field: "preco_venda", header: "Preço Venda", body: (rowData) => formatarMoeda(rowData.preco_venda) },
     {
@@ -276,20 +276,20 @@ const ProdutosPage = () => {
             {errors.preco_venda && <span className="text-red-500">{errors.preco_venda.message}</span>}
           </div>
 
-          <div className="flex">
+          <div className="flex gap-2">
             {/* Quantidade */}
             <Controller
               name="quantidade"
               control={control}
               render={({ field }) => (
-                <InputText
+                <InputNumber
                   {...field}
                   type="number"
                   mode="decimal"
                   minFractionDigits={field.value && unidade === "KG" ? 3 : 0}
                   maxFractionDigits={field.value && unidade === "KG" ? 3 : 0}
                   placeholder="Quantidade"
-                  className="w-full border rounded"
+                  className="!w-fit rounded"
                   invalid={!!errors.quantidade}
                 />
               )}
@@ -301,8 +301,16 @@ const ProdutosPage = () => {
               control={control}
               render={({ field }) => (
                 <div className="flex gap-2">
-                  <InputText {...field} type="number" mode="decimal" placeholder="EAN" className="w-full border rounded" invalid={!!errors.ean} />
-                  <Button className="w-fit" severity="secondary" type="button" label="Gerar" onClick={handleGenerateEAN} />
+                  <InputNumber
+                    value={field.value}
+                    onValueChange={(e) => field.onChange(e.value)} // ⚠️ importante usar .value
+                    inputRef={field.ref}
+                    placeholder="EAN"
+                    useGrouping={false}
+                    className="w-full rounded"
+                    invalid={!!errors.ean}
+                  />
+                  <Button className="!w-[100px]" size="small" severity="secondary" type="button" label="Gerar" onClick={handleGenerateEAN} />
                 </div>
               )}
             />
@@ -320,7 +328,7 @@ const ProdutosPage = () => {
               options={unidades}
               optionLabel="nome"
               optionValue="value"
-              placeholder="Escolha uma unidade de medida"
+              placeholder="Unidade de medida"
               className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
             />
           )}
@@ -337,7 +345,7 @@ const ProdutosPage = () => {
               options={marcas}
               optionLabel="nome"
               optionValue="id"
-              placeholder="Selecione uma marca (Opcional)"
+              placeholder="Marca (Opcional)"
               className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
             />
           )}
@@ -354,7 +362,7 @@ const ProdutosPage = () => {
               options={categorias}
               optionLabel="nome"
               optionValue="id"
-              placeholder="Selecione uma categoria (Opcional)"
+              placeholder="Categoria (Opcional)"
               className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
             />
           )}
@@ -371,7 +379,7 @@ const ProdutosPage = () => {
               options={fornecedores}
               optionLabel="nome"
               optionValue="id"
-              placeholder="Selecione um fornecedor (Opcional)"
+              placeholder="Fornecedor (Opcional)"
               className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
             />
           )}
