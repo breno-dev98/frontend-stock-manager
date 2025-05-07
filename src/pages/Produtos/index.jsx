@@ -85,7 +85,7 @@ const ProdutosPage = () => {
       ean: produto.ean,
       preco_custo: Number(produto.preco_custo),
       preco_venda: Number(produto.preco_venda),
-      quantidade: produto.quantidade,
+      quantidade: Number(produto.quantidade),
       unidade_medida: produto.unidade_medida,
     });
     setModalVisible(true);
@@ -128,7 +128,7 @@ const ProdutosPage = () => {
         if (isNaN(quantidade)) return "-";
 
         // Formata com base na unidade
-        const casasDecimais = unidade === "KG" ? 3 : 2;
+        const casasDecimais = unidade === "KG" ? 3 : 0;
 
         return quantidade.toFixed(casasDecimais);
       },
@@ -151,6 +151,7 @@ const ProdutosPage = () => {
   }
 
   const handleSave = async (data) => {
+    
     if (isEditing) {
       try {
         const produtoAtualizado = await ProdutoService.update(editId, data);
@@ -283,9 +284,11 @@ const ProdutosPage = () => {
               control={control}
               render={({ field }) => (
                 <InputNumber
-                  {...field}
-                  type="number"
+                  value={field.value}
+                  onValueChange={(e) => field.onChange(e.value)} // ⚠️ importante usar .value
+                  inputRef={field.ref}
                   mode="decimal"
+                  useGrouping={false}
                   minFractionDigits={field.value && unidade === "KG" ? 3 : 0}
                   maxFractionDigits={field.value && unidade === "KG" ? 3 : 0}
                   placeholder="Quantidade"
@@ -318,73 +321,72 @@ const ProdutosPage = () => {
           </div>
         </div>
 
-        {/* Unidade de Medida */}
-        <Controller
-          name="unidade_medida"
-          control={control}
-          render={({ field }) => (
-            <Dropdown
-              {...field}
-              options={unidades}
-              optionLabel="nome"
-              optionValue="value"
-              placeholder="Unidade de medida"
-              className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
-            />
-          )}
-        />
-        {errors.unidade_medida && <span className="text-red-500">{errors.unidade_medida.message}</span>}
-
-        {/* Marca ID */}
-        <Controller
-          name="marca_id"
-          control={control}
-          render={({ field }) => (
-            <Dropdown
-              {...field}
-              options={marcas}
-              optionLabel="nome"
-              optionValue="id"
-              placeholder="Marca (Opcional)"
-              className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
-            />
-          )}
-        />
-        {errors.marca_id && <span className="text-red-500">{errors.marca_id.message}</span>}
-
-        {/* Categoria ID */}
-        <Controller
-          name="categoria_id"
-          control={control}
-          render={({ field }) => (
-            <Dropdown
-              {...field}
-              options={categorias}
-              optionLabel="nome"
-              optionValue="id"
-              placeholder="Categoria (Opcional)"
-              className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
-            />
-          )}
-        />
-        {errors.categoria_id && <span className="text-red-500">{errors.categoria_id.message}</span>}
-
-        {/* Fornecedor ID */}
-        <Controller
-          name="fornecedor_id"
-          control={control}
-          render={({ field }) => (
-            <Dropdown
-              {...field}
-              options={fornecedores}
-              optionLabel="nome"
-              optionValue="id"
-              placeholder="Fornecedor (Opcional)"
-              className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
-            />
-          )}
-        />
-        {errors.fornecedor_id && <span className="text-red-500">{errors.fornecedor_id.message}</span>}
+        <div className="flex flex-wrap md:grid md:grid-cols-2">
+          {/* Unidade de Medida */}
+          <Controller
+            name="unidade_medida"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                options={unidades}
+                optionLabel="nome"
+                optionValue="value"
+                placeholder="Unidade de medida"
+                className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
+              />
+            )}
+          />
+          {errors.unidade_medida && <span className="text-red-500">{errors.unidade_medida.message}</span>}
+          {/* Marca ID */}
+          <Controller
+            name="marca_id"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                options={marcas}
+                optionLabel="nome"
+                optionValue="id"
+                placeholder="Marca (Opcional)"
+                className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
+              />
+            )}
+          />
+          {errors.marca_id && <span className="text-red-500">{errors.marca_id.message}</span>}
+          {/* Categoria ID */}
+          <Controller
+            name="categoria_id"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                options={categorias}
+                optionLabel="nome"
+                optionValue="id"
+                placeholder="Categoria (Opcional)"
+                className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
+              />
+            )}
+          />
+          {errors.categoria_id && <span className="text-red-500">{errors.categoria_id.message}</span>}
+          {/* Fornecedor ID */}
+          <Controller
+            name="fornecedor_id"
+            control={control}
+            render={({ field }) => (
+              <Dropdown
+                {...field}
+                options={fornecedores}
+                optionLabel="nome"
+                optionValue="id"
+                placeholder="Fornecedor (Opcional)"
+                className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
+              />
+            )}
+          />
+          {errors.fornecedor_id && <span className="text-red-500">{errors.fornecedor_id.message}</span>}
+        </div>
       </BaseModal>
 
       <Toast ref={toastRef} />
