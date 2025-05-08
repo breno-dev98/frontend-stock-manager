@@ -11,6 +11,7 @@ import UnidadesPage from "./pages/Unidades";
 import UsuariosPage from "./pages/Usuarios";
 import LoginPage from "./pages/Login";
 import PrivateRoute from "./routes/PrivateRoute";
+import DashboardPage from "./pages/Dashboard";
 
 const App = () => {
 
@@ -24,6 +25,7 @@ const App = () => {
       <Route element={<PrivateRoute />}>
         <Route path="/" element={<Layout />}>
           <Route path="produtos" element={<ProdutosPage />} />
+          <Route path="dashboard" element={<DashboardPage />} />
           <Route path="marcas" element={<MarcasPage />} />
           <Route path="categorias" element={<CategoriasPage />} />
           <Route path="fornecedores" element={<FornecedoresPage />} />
