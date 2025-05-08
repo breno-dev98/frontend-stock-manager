@@ -28,6 +28,7 @@ const ProdutosPage = () => {
   const [categorias, setCategorias] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
+  const [filtro, setFiltro] = useState("");
   const [editId, setEditId] = useState(null);
   const unidades = [
     { nome: "Unidade", value: "UNIDADE" },
@@ -73,6 +74,8 @@ const ProdutosPage = () => {
     fetchProdutos();
   }, []);
 
+  
+
   const handleEdit = async (produto) => {       
     setEditId(produto.id);
     setIsEditing(true);
@@ -82,7 +85,7 @@ const ProdutosPage = () => {
       categoria_id: produto.categoria_id,
       marca_id: produto.marca_id,
       fornecedor_id: produto.fornecedor_id,
-      ean: produto.ean,
+      ean: Number(produto.ean),
       preco_custo: Number(produto.preco_custo),
       preco_venda: Number(produto.preco_venda),
       quantidade: Number(produto.quantidade),
@@ -98,6 +101,7 @@ const ProdutosPage = () => {
   };
 
   const columns = [
+    { field: "ean", header: "EAN", body: (rowData) => rowData.ean || "-" },
     { field: "nome", header: "Nome" },
     { field: "descricao", header: "Descrição", body: (rowData) => rowData.descricao || "-" },
     {
@@ -115,7 +119,6 @@ const ProdutosPage = () => {
       header: "Fornecedor",
       body: (rowData) => fornecedores.find((c) => c.id === rowData.fornecedor_id)?.nome || "-",
     },
-    { field: "ean", header: "EAN", body: (rowData) => rowData.ean || "-" },
     { field: "preco_custo", header: "Preço Custo", body: (rowData) => formatarMoeda(rowData.preco_custo) },
     { field: "preco_venda", header: "Preço Venda", body: (rowData) => formatarMoeda(rowData.preco_venda) },
     {
@@ -145,6 +148,13 @@ const ProdutosPage = () => {
     },
   ];
 
+  const produtosFiltrados = produtos.filter((produto) =>
+    columns.some((col) => {
+      const valor = produto[col.field];
+      return valor?.toString().toLowerCase().includes(filtro.toLowerCase());
+    })
+  );
+
   const handleGenerateEAN = () => {
     const eangerado = gerarEAN()
     setValue("ean", eangerado);
@@ -154,7 +164,7 @@ const ProdutosPage = () => {
     
     if (isEditing) {
       try {
-        const produtoAtualizado = await ProdutoService.update(editId, data);
+        const produtoAtualizado = await ProdutoService.update(editId, data);        
         setProdutos((prev) => prev.map((m) => (m.id === editId ? produtoAtualizado.produto : m)));
         setIsEditing(false);
         handleCloseModal();
@@ -187,7 +197,7 @@ const ProdutosPage = () => {
   return (
     <PagesLayout title="Gerenciamento de Produtos">
       <BaseTable
-        data={produtos}
+        data={produtosFiltrados}
         columns={columns}
         buttonLabel="Novo Produto"
         sortable
@@ -195,6 +205,8 @@ const ProdutosPage = () => {
         emptyMessage="Nenhum produto encontrado"
         headerTitle="Lista de Produtos"
         onClick={() => setModalVisible(true)}
+        valueSearch={filtro}
+        onChangeSearch={(e) => setFiltro(e.target.value)}
       />
 
       <BaseModal
