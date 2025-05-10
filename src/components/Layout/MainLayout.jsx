@@ -3,6 +3,7 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext"; 
 import { Button } from "primereact/button";
 import { Divider } from "primereact/divider";
+import {Avatar} from "primereact/avatar"
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -29,6 +30,7 @@ const Layout = () => {
         <h1 className="text-xl font-bold">Stock Manager</h1>
         <div className="flex gap-4 items-center">
           <h1 className="text-xl">Olá, Administrador</h1>
+          <Avatar icon="pi pi-user" shape="circle"/>
           <i title="Logout" className="pi pi-sign-out cursor-pointer" onClick={logout}></i>
         </div>
         {/* Você pode colocar perfil, logout, etc aqui */}
