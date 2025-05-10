@@ -24,8 +24,8 @@ const App = () => {
       {/* ROTAS PRIVADAS */}
       <Route element={<PrivateRoute />}>
         <Route path="/" element={<Layout />}>
-          <Route path="produtos" element={<ProdutosPage />} />
           <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="produtos" element={<ProdutosPage />} />
           <Route path="marcas" element={<MarcasPage />} />
           <Route path="categorias" element={<CategoriasPage />} />
           <Route path="fornecedores" element={<FornecedoresPage />} />

@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Button } from "primereact/button";
@@ -8,30 +8,28 @@ import { AuthContext } from "../../context/authContext";
 import { useNavigate } from "react-router-dom";
 import { ProgressSpinner } from "primereact/progressspinner";
 import { Controller, useForm } from "react-hook-form";
-import { loginSchema } from "../../schemas/loginSchema"
+import { loginSchema } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-
 export default function LoginPage() {
-  
   const [loading, setLoading] = useState(false);
- const {
-   register,
-   control,
-   handleSubmit,
-   formState: { errors },
- } = useForm({
-   resolver: zodResolver(loginSchema),
-   defaultValues: {
-     email: "",
-     senha: ""
-   }
- });
+  const { login, auth } = useContext(AuthContext);
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      senha: "",
+    },
+  });
+
   const navigate = useNavigate();
-  const { login } = useContext(AuthContext);
 
   const onSubmit = async (data) => {
-
     setLoading(true);
     try {
       const response = await loginService(data);
@@ -39,14 +37,18 @@ export default function LoginPage() {
       const token = response.token;
 
       login(token);
-
-      navigate("/");
     } catch (error) {
       console.error("Erro ao realizar o login", error);
     } finally {
       setLoading(false);
     }
   };
+
+    useEffect(() => {
+      if (auth.isAuthenticated) {
+        navigate("/dashboard");
+      }
+    }, [auth.isAuthenticated, navigate]);
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-blue-50 p-4">
