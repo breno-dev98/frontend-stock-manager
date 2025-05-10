@@ -107,7 +107,7 @@ const EntradaPage = () => {
     setIsEditing(true);
     reset({
       produto_id: entrada.produto_id,
-      quantidade: Number(entrada.categoria_id),
+      quantidade: Number(entrada.quantidade),
       fornecedor_id: entrada.fornecedor_id,
       data_entrada: entrada.data_entrada,
       preco_compra: Number(entrada.preco_compra),
