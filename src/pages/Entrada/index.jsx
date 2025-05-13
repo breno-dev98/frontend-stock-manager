@@ -18,6 +18,7 @@ import { entradaSchema } from "../../schemas/entradaSchema";
 import { Calendar } from "primereact/calendar";
 import { InputTextarea } from "primereact/inputtextarea";
 import { EntradaService } from "../../services/entradaService";
+import { Toast } from "primereact/toast";
 
 const EntradaPage = () => {
   const { toastRef, showSuccess, showError } = useToastMessage();
@@ -96,7 +97,13 @@ const EntradaPage = () => {
 
   const handleCloseModal = () => {
     setModalVisible(false);
-    reset();
+    reset({
+      produto_id: "",
+      quantidade: "",
+      fornecedor_id: "",
+      data_entrada: "",
+      preco_compra: "",
+    });
     if (isEditing) {
       setIsEditing(false);
     }
@@ -235,6 +242,9 @@ const EntradaPage = () => {
           <InputTextarea placeholder="Observações" />
         </div>
       </BaseModal>
+
+      <Toast ref={toastRef} />
+            <ConfirmDialog />
     </PagesLayout>
   );
 };

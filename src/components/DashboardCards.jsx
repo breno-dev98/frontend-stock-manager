@@ -1,4 +1,4 @@
-const DashboardCards = () => {
+const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, totalTransacoes}) => {
     return (
       <section className="flex flex-wrap gap-5">
         {/* Card Total Produtos */}
@@ -12,7 +12,7 @@ const DashboardCards = () => {
             <i className="pi pi-box text-blue-400 bg-blue-50" style={{ fontSize: "1.7rem", padding: 10, borderRadius: 50 }}></i>
             <div>
               <h4 className="text-md font-medium text-gray-400">Total de Produtos</h4>
-              <span className="font-bold text-lg text-black">120</span>
+              <span className="font-bold text-lg text-black">{totalProdutos}</span>
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@ const DashboardCards = () => {
             <i className="bi bi-truck text-yellow-400 bg-yellow-50" style={{ fontSize: "1.7rem", padding: 10, borderRadius: 50 }}></i>
             <div>
               <h4 className="text-md font-medium text-gray-400">Fornecedores</h4>
-              <span className="font-bold text-lg text-black">38</span>
+              <span className="font-bold text-lg text-black">{totalFornecedores}</span>
             </div>
           </div>
         </div>
