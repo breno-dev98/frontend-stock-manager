@@ -27,7 +27,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
             <i className="pi pi-exclamation-triangle text-red-400 bg-red-50" style={{ fontSize: "1.7rem", padding: 10, borderRadius: 50 }}></i>
             <div>
               <h4 className="text-md font-medium text-gray-400">Estoque Crítico</h4>
-              <span className="font-bold text-lg text-black">12</span>
+              <span className="font-bold text-lg text-black">{totalEstoqueCritico || "0"}</span>
             </div>
           </div>
         </div>

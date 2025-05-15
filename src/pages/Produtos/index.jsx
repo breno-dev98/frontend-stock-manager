@@ -18,7 +18,8 @@ import { Dropdown } from "primereact/dropdown";
 import { InputNumber } from "primereact/inputnumber";
 import { formatarMoeda } from "../../utils/masks";
 import { Button } from "primereact/button";
-import {gerarEAN} from "../../utils/gerarEAN"
+import { gerarEAN } from "../../utils/gerarEAN";
+import { FloatLabel } from "primereact/floatlabel";
 
 const ProdutosPage = () => {
   const { toastRef, showSuccess, showError } = useToastMessage();
@@ -47,25 +48,36 @@ const ProdutosPage = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(produtoSchema),
-    defaultValues: { nome: "", descricao: "", ean: "", preco_custo: "", preco_venda: "", quantidade: 0, unidade_medida: "", marca_id: "", categoria_id: "", fornecedor_id: "" },
+    defaultValues: {
+      nome: "",
+      descricao: "",
+      ean: "",
+      preco_custo: "",
+      preco_venda: "",
+      quantidade: 0,
+      unidade_medida: "",
+      marca_id: "",
+      categoria_id: "",
+      fornecedor_id: "",
+    },
   });
 
-  const unidade = watch("unidade_medida")
+  const unidade = watch("unidade_medida");
   useEffect(() => {
     const fetFornecedores = async () => {
-      const data = await FornecedorService.getAll();      
+      const data = await FornecedorService.getAll();
       setFornecedores(data.fornecedores);
     };
     const fetchCategorias = async () => {
-      const data = await CategoriaService.getAll();      
+      const data = await CategoriaService.getAll();
       setCategorias(data.categorys);
     };
     const fetchMarcas = async () => {
-      const data = await MarcaService.getAll();      
+      const data = await MarcaService.getAll();
       setMarcas(data.marcas);
     };
     const fetchProdutos = async () => {
-      const data = await ProdutoService.getAll();      
+      const data = await ProdutoService.getAll();
       setProdutos(data.produtos);
     };
     fetFornecedores();
@@ -74,9 +86,7 @@ const ProdutosPage = () => {
     fetchProdutos();
   }, []);
 
-  
-
-  const handleEdit = async (produto) => {       
+  const handleEdit = async (produto) => {
     setEditId(produto.id);
     setIsEditing(true);
     reset({
@@ -156,15 +166,14 @@ const ProdutosPage = () => {
   );
 
   const handleGenerateEAN = () => {
-    const eangerado = gerarEAN()
+    const eangerado = gerarEAN();
     setValue("ean", eangerado);
-  }
+  };
 
   const handleSave = async (data) => {
-    
     if (isEditing) {
       try {
-        const produtoAtualizado = await ProdutoService.update(editId, data);        
+        const produtoAtualizado = await ProdutoService.update(editId, data);
         setProdutos((prev) => prev.map((m) => (m.id === editId ? produtoAtualizado.produto : m)));
         setIsEditing(false);
         handleCloseModal();
@@ -215,42 +224,49 @@ const ProdutosPage = () => {
         onHide={handleCloseModal}
         onSubmit={handleSubmit(handleSave)}
       >
-        {/* Nome */}
-        <Controller
-          name="nome"
-          control={control}
-          render={({ field }) => (
-            <InputText
-              {...field}
-              type="text"
-              autoFocus={modalVisible}
-              placeholder="Nome do produto"
-              className="w-full border rounded px-2 py-1"
-              invalid={!!errors.nome}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {/* Nome */}
+          <div className="col-span-full">
+            <Controller
+              name="nome"
+              control={control}
+              render={({ field }) => (
+                <FloatLabel>
+                  <InputText
+                    {...field}
+                    type="text"
+                    id="nome"
+                    autoFocus={modalVisible}
+                    className="w-full border rounded px-2 py-1"
+                    invalid={!!errors.nome}
+                  />
+                  <label htmlFor="nome">Nome</label>
+                </FloatLabel>
+              )}
             />
-          )}
-        />
-        {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
+            {errors.nome && <span className="text-red-500">{errors.nome.message}</span>}
+          </div>
 
-        {/* Descrição */}
-        <Controller
-          name="descricao"
-          control={control}
-          render={({ field }) => (
-            <InputText
-              {...field}
-              type="text"
-              placeholder="Descrição (opcional)"
-              className="w-full border rounded px-2 py-1"
-              invalid={!!errors.descricao}
+          {/* Descrição */}
+          <div className="col-span-full">
+            <Controller
+              name="descricao"
+              control={control}
+              render={({ field }) => (
+                <InputText
+                  {...field}
+                  type="text"
+                  placeholder="Descrição (opcional)"
+                  className="w-full border rounded px-2 py-1"
+                  invalid={!!errors.descricao}
+                />
+              )}
             />
-          )}
-        />
-        {errors.descricao && <span className="text-red-500">{errors.descricao.message}</span>}
+            {errors.descricao && <span className="text-red-500">{errors.descricao.message}</span>}
+          </div>
 
-        <div className="flex flex-col gap-2">
-          <div className="flex gap-1">
-            {/* Preço de Custo */}
+          {/* Preço de Custo */}
+          <div>
             <Controller
               name="preco_custo"
               control={control}
@@ -268,8 +284,10 @@ const ProdutosPage = () => {
               )}
             />
             {errors.preco_custo && <span className="text-red-500">{errors.preco_custo.message}</span>}
+          </div>
 
-            {/* Preço de Venda */}
+          {/* Preço de Venda */}
+          <div>
             <Controller
               name="preco_venda"
               control={control}
@@ -289,115 +307,139 @@ const ProdutosPage = () => {
             {errors.preco_venda && <span className="text-red-500">{errors.preco_venda.message}</span>}
           </div>
 
-          <div className="flex gap-2">
-            {/* Quantidade */}
+          {/* Quantidade */}
+          <div>
             <Controller
               name="quantidade"
               control={control}
               render={({ field }) => (
                 <InputNumber
                   value={field.value}
-                  onValueChange={(e) => field.onChange(e.value)} // ⚠️ importante usar .value
+                  onValueChange={(e) => field.onChange(e.value)}
                   inputRef={field.ref}
                   mode="decimal"
                   useGrouping={false}
-                  minFractionDigits={field.value && unidade === "KG" ? 3 : 0}
-                  maxFractionDigits={field.value && unidade === "KG" ? 3 : 0}
+                  minFractionDigits={unidade === "KG" ? 3 : 0}
+                  maxFractionDigits={unidade === "KG" ? 3 : 0}
                   placeholder="Quantidade"
-                  className="!w-fit rounded"
+                  className="w-full rounded"
                   invalid={!!errors.quantidade}
                 />
               )}
             />
             {errors.quantidade && <span className="text-red-500">{errors.quantidade.message}</span>}
+          </div>
 
+          {/* EAN + Botão */}
+          <div className="flex gap-2 items-center">
             <Controller
               name="ean"
               control={control}
               render={({ field }) => (
-                <div className="flex gap-2">
-                  <InputNumber
-                    value={field.value}
-                    onValueChange={(e) => field.onChange(e.value)} // ⚠️ importante usar .value
-                    inputRef={field.ref}
-                    placeholder="EAN"
-                    useGrouping={false}
-                    className="w-full rounded"
-                    invalid={!!errors.ean}
+                <>
+                  <FloatLabel>
+                    <InputNumber
+                      id="ean"
+                      value={field.value}
+                      onValueChange={(e) => field.onChange(e.value)}
+                      inputRef={field.ref}
+                      useGrouping={false}
+                      className="w-full rounded"
+                      invalid={!!errors.ean}
+                    />
+                    <label htmlFor="ean">EAN</label>
+                  </FloatLabel>
+                  <Button
+                    className="!w-[100px] flex flex-col"
+                    size="small"
+                    severity="secondary"
+                    type="button"
+                    icon={<i className="pi pi-barcode" style={{ fontSize: "10px" }}></i>}
+                    label={<span className="text-xs">Gerar</span>}
+                    onClick={handleGenerateEAN}
+                    style={{padding: "8px 0px"}}
                   />
-                  <Button className="!w-[100px]" size="small" severity="secondary" type="button" label="Gerar" onClick={handleGenerateEAN} />
-                </div>
+                </>
               )}
             />
             {errors.ean && <span className="text-red-500">{errors.ean.message}</span>}
           </div>
-        </div>
 
-        <div className="flex flex-wrap md:grid md:grid-cols-2">
           {/* Unidade de Medida */}
-          <Controller
-            name="unidade_medida"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                options={unidades}
-                optionLabel="nome"
-                optionValue="value"
-                placeholder="Unidade de medida"
-                className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
-              />
-            )}
-          />
-          {errors.unidade_medida && <span className="text-red-500">{errors.unidade_medida.message}</span>}
-          {/* Marca ID */}
-          <Controller
-            name="marca_id"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                options={marcas}
-                optionLabel="nome"
-                optionValue="id"
-                placeholder="Marca (Opcional)"
-                className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
-              />
-            )}
-          />
-          {errors.marca_id && <span className="text-red-500">{errors.marca_id.message}</span>}
-          {/* Categoria ID */}
-          <Controller
-            name="categoria_id"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                options={categorias}
-                optionLabel="nome"
-                optionValue="id"
-                placeholder="Categoria (Opcional)"
-                className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
-              />
-            )}
-          />
-          {errors.categoria_id && <span className="text-red-500">{errors.categoria_id.message}</span>}
-          {/* Fornecedor ID */}
-          <Controller
-            name="fornecedor_id"
-            control={control}
-            render={({ field }) => (
-              <Dropdown
-                {...field}
-                options={fornecedores}
-                optionLabel="nome"
-                optionValue="id"
-                placeholder="Fornecedor (Opcional)"
-                className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
-              />
-            )}
-          />
-          {errors.fornecedor_id && <span className="text-red-500">{errors.fornecedor_id.message}</span>}
+          <div>
+            <Controller
+              name="unidade_medida"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={unidades}
+                  optionLabel="nome"
+                  optionValue="value"
+                  placeholder="Unidade de medida"
+                  className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
+                />
+              )}
+            />
+            {errors.unidade_medida && <span className="text-red-500">{errors.unidade_medida.message}</span>}
+          </div>
+
+          {/* Marca */}
+          <div>
+            <Controller
+              name="marca_id"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={marcas}
+                  optionLabel="nome"
+                  optionValue="id"
+                  placeholder="Marca (Opcional)"
+                  className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
+                />
+              )}
+            />
+            {errors.marca_id && <span className="text-red-500">{errors.marca_id.message}</span>}
+          </div>
+
+          {/* Categoria */}
+          <div>
+            <Controller
+              name="categoria_id"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={categorias}
+                  optionLabel="nome"
+                  optionValue="id"
+                  placeholder="Categoria (Opcional)"
+                  className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
+                />
+              )}
+            />
+            {errors.categoria_id && <span className="text-red-500">{errors.categoria_id.message}</span>}
+          </div>
+
+          {/* Fornecedor */}
+          <div>
+            <Controller
+              name="fornecedor_id"
+              control={control}
+              render={({ field }) => (
+                <Dropdown
+                  {...field}
+                  options={fornecedores}
+                  optionLabel="nome"
+                  optionValue="id"
+                  placeholder="Fornecedor (Opcional)"
+                  className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
+                />
+              )}
+            />
+            {errors.fornecedor_id && <span className="text-red-500">{errors.fornecedor_id.message}</span>}
+          </div>
         </div>
       </BaseModal>
 
