@@ -57,7 +57,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
             <i className="pi pi-arrow-right-arrow-left text-green-400 bg-green-50" style={{ fontSize: "1.7rem", padding: 10, borderRadius: 50 }}></i>
             <div>
               <h4 className="text-md font-medium text-gray-400">Transações</h4>
-              <span className="font-bold text-lg text-black">24</span>
+              <span className="font-bold text-lg text-black">{totalTransacoes}</span>
             </div>
           </div>
         </div>

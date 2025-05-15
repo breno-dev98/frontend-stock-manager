@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { CategoriaService } from "../../services/categoriasService";
 import { ProdutoService } from "../../services/produtoService";
 import { FornecedorService } from "../../services/fornecedoresService";
+import { EntradaService } from "../../services/entradaService";
 
 const DashboardPage = () => {
   const [categorias, setCategorias] = useState([]);
   const [produtos, setProdutos] = useState([]);
   const [fornecedores, setFornecedores] = useState([]);
+  const [entradas, setEntradas] = useState([]);
   useEffect(() => {
     const fetchCategorias = async () => {
       const data = await CategoriaService.getAll();
@@ -23,10 +25,16 @@ const DashboardPage = () => {
     };
 
     const fetchFornecedores = async () => {
-          const data = await FornecedorService.getAll();      
-          setFornecedores(data.fornecedores);
-        };
-    fetchFornecedores()
+      const data = await FornecedorService.getAll();
+      setFornecedores(data.fornecedores);
+    };
+
+    const fetchEntradas = async () => {
+      const data = await EntradaService.getAll();
+      setEntradas(data.entradas);
+    };
+    fetchEntradas();
+    fetchFornecedores();
     fetchProdutos();
     fetchCategorias();
   }, []);
@@ -80,7 +88,7 @@ const DashboardPage = () => {
   return (
     <PagesLayout title="Dashboard">
       <div>
-        <DashboardCards totalProdutos={produtos.length} totalFornecedores={fornecedores.length} />
+        <DashboardCards totalProdutos={produtos.length} totalFornecedores={fornecedores.length} totalTransacoes={entradas.length} />
         <section className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-4">
           <div className="flex flex-col col-span-3 w-full border my-5 border-gray-300 rounded-xl shadow-md bg-white">
             <h2 className="text-2xl font-medium py-2 pl-5 border-b text-gray-700 bg-gray-100 border-gray-300">Movimentação de Estoque</h2>
