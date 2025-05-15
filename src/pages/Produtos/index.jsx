@@ -224,7 +224,7 @@ const ProdutosPage = () => {
         onHide={handleCloseModal}
         onSubmit={handleSubmit(handleSave)}
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Nome */}
           <div className="col-span-full">
             <Controller
@@ -249,61 +249,64 @@ const ProdutosPage = () => {
 
           {/* Descrição */}
           <div className="col-span-full">
-            <Controller
-              name="descricao"
-              control={control}
-              render={({ field }) => (
-                <InputText
-                  {...field}
-                  type="text"
-                  placeholder="Descrição (opcional)"
-                  className="w-full border rounded px-2 py-1"
-                  invalid={!!errors.descricao}
-                />
-              )}
-            />
+            <FloatLabel>
+              <Controller
+                name="descricao"
+                control={control}
+                render={({ field }) => (
+                  <InputText {...field} type="text" id="descricao" className="w-full border rounded px-2 py-1" invalid={!!errors.descricao} />
+                )}
+              />
+              <label htmlFor="descricao">Descrição (Opcional)</label>
+            </FloatLabel>
             {errors.descricao && <span className="text-red-500">{errors.descricao.message}</span>}
           </div>
 
           {/* Preço de Custo */}
           <div>
-            <Controller
-              name="preco_custo"
-              control={control}
-              render={({ field }) => (
-                <InputNumber
-                  value={field.value}
-                  onValueChange={(e) => field.onChange(e.value)}
-                  locale="pt-br"
-                  mode="currency"
-                  currency="BRL"
-                  placeholder="Preço de custo"
-                  className="w-full rounded"
-                  invalid={!!errors.preco_custo}
-                />
-              )}
-            />
+            <FloatLabel>
+              <Controller
+                name="preco_custo"
+                control={control}
+                render={({ field }) => (
+                  <InputNumber
+                    value={field.value}
+                    onValueChange={(e) => field.onChange(e.value)}
+                    locale="pt-br"
+                    mode="currency"
+                    currency="BRL"
+                    id="preco_custo"
+                    className="w-full rounded"
+                    invalid={!!errors.preco_custo}
+                  />
+                )}
+              />
+              <label htmlFor="preco_custo">Preço de custo</label>
+            </FloatLabel>
             {errors.preco_custo && <span className="text-red-500">{errors.preco_custo.message}</span>}
           </div>
 
           {/* Preço de Venda */}
           <div>
-            <Controller
-              name="preco_venda"
-              control={control}
-              render={({ field }) => (
-                <InputNumber
-                  value={field.value}
-                  onValueChange={(e) => field.onChange(e.value)}
-                  locale="pt-br"
-                  mode="currency"
-                  currency="BRL"
-                  placeholder="Preço de venda"
-                  className="w-full rounded"
-                  invalid={!!errors.preco_venda}
-                />
-              )}
-            />
+              <Controller
+                name="preco_venda"
+                control={control}
+                render={({ field }) => (
+                  <FloatLabel>
+                  <InputNumber
+                    value={field.value}
+                    id="preco_venda"
+                    onValueChange={(e) => field.onChange(e.value)}
+                    locale="pt-br"
+                    mode="currency"
+                    currency="BRL"
+                    className="w-full rounded"
+                    invalid={!!errors.preco_venda}
+                    />
+                    <label htmlFor="preco_venda">Preço de venda</label>
+                    </FloatLabel>
+                )}
+              />
             {errors.preco_venda && <span className="text-red-500">{errors.preco_venda.message}</span>}
           </div>
 
@@ -357,12 +360,12 @@ const ProdutosPage = () => {
                     icon={<i className="pi pi-barcode" style={{ fontSize: "10px" }}></i>}
                     label={<span className="text-xs">Gerar</span>}
                     onClick={handleGenerateEAN}
-                    style={{padding: "8px 0px"}}
-                  />
+                    style={{ padding: "8px 0px" }}
+                    />
                 </>
               )}
-            />
-            {errors.ean && <span className="text-red-500">{errors.ean.message}</span>}
+              />
+              {errors.ean && <span className="text-red-500">{errors.ean.message}</span>}
           </div>
 
           {/* Unidade de Medida */}
