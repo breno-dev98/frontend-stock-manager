@@ -288,11 +288,11 @@ const ProdutosPage = () => {
 
           {/* Preço de Venda */}
           <div>
-              <Controller
-                name="preco_venda"
-                control={control}
-                render={({ field }) => (
-                  <FloatLabel>
+            <Controller
+              name="preco_venda"
+              control={control}
+              render={({ field }) => (
+                <FloatLabel>
                   <InputNumber
                     value={field.value}
                     id="preco_venda"
@@ -302,11 +302,11 @@ const ProdutosPage = () => {
                     currency="BRL"
                     className="w-full rounded"
                     invalid={!!errors.preco_venda}
-                    />
-                    <label htmlFor="preco_venda">Preço de venda</label>
-                    </FloatLabel>
-                )}
-              />
+                  />
+                  <label htmlFor="preco_venda">Preço de venda</label>
+                </FloatLabel>
+              )}
+            />
             {errors.preco_venda && <span className="text-red-500">{errors.preco_venda.message}</span>}
           </div>
 
@@ -316,18 +316,21 @@ const ProdutosPage = () => {
               name="quantidade"
               control={control}
               render={({ field }) => (
-                <InputNumber
-                  value={field.value}
-                  onValueChange={(e) => field.onChange(e.value)}
-                  inputRef={field.ref}
-                  mode="decimal"
-                  useGrouping={false}
-                  minFractionDigits={unidade === "KG" ? 3 : 0}
-                  maxFractionDigits={unidade === "KG" ? 3 : 0}
-                  placeholder="Quantidade"
-                  className="w-full rounded"
-                  invalid={!!errors.quantidade}
-                />
+                <FloatLabel>
+                  <InputNumber
+                    value={field.value}
+                    onValueChange={(e) => field.onChange(e.value)}
+                    inputRef={field.ref}
+                    mode="decimal"
+                    useGrouping={false}
+                    minFractionDigits={unidade === "KG" ? 3 : 0}
+                    maxFractionDigits={unidade === "KG" ? 3 : 0}
+                    id="quantidade"
+                    className="w-full rounded"
+                    invalid={!!errors.quantidade}
+                  />
+                  <label htmlFor="quantidade">Quantidade</label>
+                </FloatLabel>
               )}
             />
             {errors.quantidade && <span className="text-red-500">{errors.quantidade.message}</span>}
@@ -361,11 +364,11 @@ const ProdutosPage = () => {
                     label={<span className="text-xs">Gerar</span>}
                     onClick={handleGenerateEAN}
                     style={{ padding: "8px 0px" }}
-                    />
+                  />
                 </>
               )}
-              />
-              {errors.ean && <span className="text-red-500">{errors.ean.message}</span>}
+            />
+            {errors.ean && <span className="text-red-500">{errors.ean.message}</span>}
           </div>
 
           {/* Unidade de Medida */}
@@ -374,14 +377,17 @@ const ProdutosPage = () => {
               name="unidade_medida"
               control={control}
               render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={unidades}
-                  optionLabel="nome"
-                  optionValue="value"
-                  placeholder="Unidade de medida"
-                  className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
-                />
+                <FloatLabel>
+                  <Dropdown
+                    {...field}
+                    options={unidades}
+                    optionLabel="nome"
+                    optionValue="value"
+                    id="unidade_de_medida"
+                    className={`w-full border rounded ${errors.unidade_medida ? "border-red-500" : ""}`}
+                  />
+                  <label htmlFor="unidade_de_medida">Unidade de Medida</label>
+                </FloatLabel>
               )}
             />
             {errors.unidade_medida && <span className="text-red-500">{errors.unidade_medida.message}</span>}
@@ -393,14 +399,17 @@ const ProdutosPage = () => {
               name="marca_id"
               control={control}
               render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={marcas}
-                  optionLabel="nome"
-                  optionValue="id"
-                  placeholder="Marca (Opcional)"
-                  className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
-                />
+                <FloatLabel>
+                  <Dropdown
+                    {...field}
+                    options={marcas}
+                    optionLabel="nome"
+                    optionValue="id"
+                    id="marca_id"
+                    className={`w-full border rounded ${errors.marca_id ? "border-red-500" : ""}`}
+                  />
+                  <label htmlFor="marca_id">Marca</label>
+                </FloatLabel>
               )}
             />
             {errors.marca_id && <span className="text-red-500">{errors.marca_id.message}</span>}
@@ -412,14 +421,17 @@ const ProdutosPage = () => {
               name="categoria_id"
               control={control}
               render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={categorias}
-                  optionLabel="nome"
-                  optionValue="id"
-                  placeholder="Categoria (Opcional)"
-                  className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
-                />
+                <FloatLabel>
+                  <Dropdown
+                    {...field}
+                    options={categorias}
+                    optionLabel="nome"
+                    optionValue="id"
+                    id="categoria_id"
+                    className={`w-full border rounded ${errors.categoria_id ? "border-red-500" : ""}`}
+                  />
+                  <label htmlFor="categoria_id">Categoria (Opcional)</label>
+                </FloatLabel>
               )}
             />
             {errors.categoria_id && <span className="text-red-500">{errors.categoria_id.message}</span>}
@@ -431,14 +443,17 @@ const ProdutosPage = () => {
               name="fornecedor_id"
               control={control}
               render={({ field }) => (
-                <Dropdown
-                  {...field}
-                  options={fornecedores}
-                  optionLabel="nome"
-                  optionValue="id"
-                  placeholder="Fornecedor (Opcional)"
-                  className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
-                />
+                <FloatLabel>
+                  <Dropdown
+                    {...field}
+                    options={fornecedores}
+                    optionLabel="nome"
+                    optionValue="id"
+                    id="fornecedor_id"
+                    className={`w-full border rounded ${errors.fornecedor_id ? "border-red-500" : ""}`}
+                  />
+                  <label htmlFor="fornecedor_id">Fornecedor (Opcional)</label>
+                </FloatLabel>
               )}
             />
             {errors.fornecedor_id && <span className="text-red-500">{errors.fornecedor_id.message}</span>}
