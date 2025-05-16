@@ -63,6 +63,8 @@ const ProdutosPage = () => {
   });
 
   const unidade = watch("unidade_medida");
+  const custo = watch("preco_custo")
+  const venda = watch("preco_venda")
   useEffect(() => {
     const fetFornecedores = async () => {
       const data = await FornecedorService.getAll();
@@ -203,6 +205,22 @@ const ProdutosPage = () => {
     }
   };
 
+  const calcularMarkUp = () => {
+    const custoNum = parseFloat(custo);
+    const vendaNum = parseFloat(venda);
+
+    if (!vendaNum || vendaNum === 0 || isNaN(custoNum) || isNaN(vendaNum)) {
+      return 0;
+    }
+
+    const lucro = vendaNum - custoNum;
+    const markup = custoNum > 0 ? (lucro / custo) * 100 : 0;
+
+    return markup;
+  };
+
+  const Markup = calcularMarkUp().toFixed(2)
+
   return (
     <PagesLayout title="Gerenciamento de Produtos">
       <BaseTable
@@ -308,6 +326,10 @@ const ProdutosPage = () => {
               )}
             />
             {errors.preco_venda && <span className="text-red-500">{errors.preco_venda.message}</span>}
+          </div>
+          {/* Margem de lucro */}
+          <div className="text-lg font-medium">
+            Margem: <span className={`text-blue-600 ${Markup < 0 && "text-red-600"} ${Markup == 0 && "text-gray-400"} font-bold`}>{Markup}%</span>
           </div>
 
           {/* Quantidade */}
