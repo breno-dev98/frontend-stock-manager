@@ -6,6 +6,6 @@ describe('Acesso à página de marcas', () => {
     it('Deve navegar para marcas via sidebar', () => {
         cy.get('#marcas_nav').click();
         cy.url().should('include', '/marcas');
-        cy.contains('Produtos').should('exist');
+        cy.contains('Marcas').should('exist');
     });
 });
