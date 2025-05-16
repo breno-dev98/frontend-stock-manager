@@ -6,6 +6,6 @@ describe('Acesso à página de categorias', () => {
     it('Deve navegar para categorias via sidebar', () => {
         cy.get('#categorias_nav').click();
         cy.url().should('include', '/categorias');
-        cy.contains('Marcas').should('exist');
+        cy.contains('Categorias').should('exist');
     });
 });
