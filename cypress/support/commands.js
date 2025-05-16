@@ -23,3 +23,13 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', () => {
+
+    cy.visit('localhost:5173/login');
+    cy.get('input[name=email]').type(Cypress.env('EMAIL'));
+    cy.get('input[name=senha]').type(Cypress.env('SENHA'));
+    cy.get('button[type=submit]').click();
+    cy.url().should('include', '/dashboard');
+
+})

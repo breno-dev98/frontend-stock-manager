@@ -12,16 +12,17 @@ const Layout = () => {
   const { logout } = useContext(AuthContext);
 
   const menuItems = [
-    { label: "Dashboard", icon: "pi pi-gauge", path: "/dashboard" },
-    { label: "Produtos", icon: "pi pi-box", path: "/produtos" },
-    { label: "Marcas", icon: "pi pi-tag", path: "/marcas" },
-    { label: "Categorias", icon: "pi pi-th-large", path: "/categorias" },
-    { label: "Fornecedores", icon: "pi pi-truck", path: "/fornecedores" },
-    { label: "Usuários", icon: "pi pi-users", path: "/usuarios" },
-    { label: "Entrada", icon: "pi pi-arrow-circle-up", path: "/entradas" },
-    { label: "Saída", icon: "pi pi-arrow-circle-down", path: "/saidas" },
-    { label: "Unidades", icon: "bi bi-rulers", path: "/unidades" },
+    { label: "Dashboard", icon: "pi pi-gauge", path: "/dashboard", id: "dashboard_nav" },
+    { label: "Produtos", icon: "pi pi-box", path: "/produtos", id: "produtos_nav" },
+    { label: "Marcas", icon: "pi pi-tag", path: "/marcas", id: "marcas_nav" },
+    { label: "Categorias", icon: "pi pi-th-large", path: "/categorias", id: "categorias_nav" },
+    { label: "Fornecedores", icon: "pi pi-truck", path: "/fornecedores", id: "fornecedores_nav" },
+    { label: "Usuários", icon: "pi pi-users", path: "/usuarios", id: "usuarios_nav" },
+    { label: "Entrada", icon: "pi pi-arrow-circle-up", path: "/entradas", id: "entradas_nav" },
+    { label: "Saída", icon: "pi pi-arrow-circle-down", path: "/saidas", id: "saidas_nav" },
+    { label: "Unidades", icon: "bi bi-rulers", path: "/unidades", id: "unidades_nav" },
   ];
+
 
   return (
     <div className="h-screen flex flex-col overflow-hidden">
@@ -51,6 +52,7 @@ const Layout = () => {
             {menuItems.map((item, index) => (
               <div
                 key={index}
+                id={item.id}
                 className={`flex items-center cursor-pointer p-3 rounded-md hover:bg-gray-100 transition-colors ${
                   location.pathname === item.path ? "bg-gray-200" : ""
                 }`}
