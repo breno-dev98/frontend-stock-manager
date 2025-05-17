@@ -1,9 +1,9 @@
 const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, totalTransacoes}) => {
     return (
-      <section className="flex flex-wrap gap-5">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
         {/* Card Total Produtos */}
         <div
-          className="w-max flex-1 py-6 pl-6 pr-12 rounded-lg"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -16,9 +16,10 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
             </div>
           </div>
         </div>
+
         {/* Card Estoque Crítico */}
         <div
-          className="w-max flex-1 py-6 pl-6 pr-12 rounded-lg"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -31,9 +32,10 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
             </div>
           </div>
         </div>
+
         {/* Card Fornecedores */}
         <div
-          className="w-max flex-1 py-6 pl-6 pr-12 rounded-lg"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -46,9 +48,10 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
             </div>
           </div>
         </div>
+
         {/* Card Transações */}
         <div
-          className="w-max flex-1 py-6 pl-6 pr-12 rounded-lg"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}

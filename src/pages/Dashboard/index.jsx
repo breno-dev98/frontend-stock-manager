@@ -89,14 +89,43 @@ const DashboardPage = () => {
     <PagesLayout title="Dashboard">
       <div>
         <DashboardCards totalProdutos={produtos.length} totalFornecedores={fornecedores.length} totalTransacoes={entradas.length} />
-        <section className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-4 gap-4">
-          <div className="flex flex-col col-span-3 w-full border my-5 border-gray-300 rounded-xl shadow-md bg-white">
-            <h2 className="text-2xl font-medium py-2 pl-5 border-b text-gray-700 bg-gray-100 border-gray-300">Movimentação de Estoque</h2>
-            <Chart type="line" data={lineData} />
+        <section className="grid grid-cols-1 md:grid-cols-5 gap-4">
+          {/* Gráfico de Linha */}
+          <div className="col-span-1 md:col-span-3 flex flex-col w-full border my-5 border-gray-300 rounded-xl shadow-md bg-white min-h-[400px]">
+            <h2 className="text-lg lg:text-2xl font-medium py-2 pl-5 border-b text-gray-700 bg-gray-100 border-gray-300">Movimentação de Estoque</h2>
+            <div className="flex-1 flex">
+              <div className="w-full h-full px-4 pb-4">
+                <Chart
+                  type="line"
+                  className="h-full"
+                  data={lineData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </div>
+            </div>
           </div>
-          <div className="flex flex-col col-span-1 w-full h-fit border my-5 border-gray-300 rounded-xl shadow-md bg-white">
-            <h2 className="text-2xl font-medium py-2 pl-5 border-b text-gray-700 bg-gray-100 border-gray-300">Distribuição por Categoria</h2>
-            <Chart type="doughnut" data={doughnutData} />
+
+          {/* Gráfico Doughnut */}
+          <div className="col-span-1 md:col-span-2 flex flex-col w-full border my-5 border-gray-300 rounded-xl shadow-md bg-white min-h-[400px]">
+            <h2 className="text-lg lg:text-2xl font-medium py-2 pl-5 border-b text-gray-700 bg-gray-100 border-gray-300">
+              Distribuição por Categoria
+            </h2>
+            <div className="flex-1 flex">
+              <div className="w-full h-full px-4 pb-4">
+                <Chart
+                  type="doughnut"
+                  className="h-full"
+                  data={doughnutData}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
+                />
+              </div>
+            </div>
           </div>
         </section>
       </div>
