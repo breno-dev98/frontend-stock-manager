@@ -10,13 +10,18 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import { Controller, useForm } from "react-hook-form";
 import { loginSchema } from "../../schemas/loginSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ConfirmDialog } from "primereact/confirmdialog";
+import { Toast } from "primereact/toast";
+import { useToastMessage } from "../../hooks/useToastMessage";
 
 export default function LoginPage() {
   const [loading, setLoading] = useState(false);
+  const { toastRef, showSuccess, showError } = useToastMessage();
   const { login, auth } = useContext(AuthContext);
   const {
     register,
     control,
+    setError,
     handleSubmit,
     formState: { errors },
   } = useForm({
@@ -26,6 +31,7 @@ export default function LoginPage() {
       senha: "",
     },
   });
+  
 
   const navigate = useNavigate();
 
@@ -37,8 +43,22 @@ export default function LoginPage() {
       const token = response.token;
 
       login(token);
+      showSuccess("Login realizado com sucesso")
     } catch (error) {
+      showError("Erro ao fazer login")
       console.error("Erro ao realizar o login", error);
+      if (error.response && error.response.data?.error) {
+        setError("root", {
+          type: "manual",
+          message: error.response.data.error,
+        });
+      } else {
+        setError("root", {
+          type: "manual",
+          message: "Erro ao conectar com o servidor.",
+        });
+      }
+      
     } finally {
       setLoading(false);
     }
@@ -56,6 +76,7 @@ export default function LoginPage() {
         <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Stock Manager</h2>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="flex flex-col gap-2">
+            {errors.root && <p className="text-red-500 text-sm">{errors.root.message}</p>}
             <label htmlFor="email" className="text-sm font-medium text-gray-700">
               Email
             </label>
@@ -101,13 +122,27 @@ export default function LoginPage() {
             </button>
           </div>
           <Button
-            label={loading ? <ProgressSpinner style={{ width: "25px", height: "25px" }} strokeWidth="5" /> : "Entrar"}
+            label={
+              loading ? (
+                <div className="flex items-center justify-center gap-2 w-full">
+                  <div className="flex items-center">
+                    <span className="ml-2">Carregando...</span>
+                    <ProgressSpinner style={{ width: "20px", height: "20px", display: "inline-block" }} strokeWidth="5" />
+                  </div>
+                </div>
+              ) : (
+                "Entrar"
+              )
+            }
             icon={loading ? "" : "pi pi-sign-in"}
             className="w-full mt-4"
             type="submit"
           />
         </form>
       </Card>
+
+      <Toast ref={toastRef} />
+      <ConfirmDialog />
     </div>
   );
 }
