@@ -18,7 +18,7 @@ export default function BaseModal({
       contentClassName="!overflow-visible border-y border-y-gray-300"
     >
       <form onSubmit={onSubmit}>
-        <div className="pt-10">
+        <div className="pt-5 overflow-auto">
           {/* Renderiza os children (inputs) passados para o modal */}
           {children}
         </div>
