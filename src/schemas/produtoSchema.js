@@ -36,6 +36,23 @@ export const produtoSchema = z.object({
         .refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
             message: "A quantidade deve ser um número positivo",
         }),
+    estoque_minimo: z
+        .number({
+            required_error: "O estoque mínimo é obrigatório",
+            invalid_type_error: "O estoque mínimo deve ser um número",
+        })
+        .refine((val) => val >= 0, {
+            message: "O estoque mínimo deve ser um número positivo",
+        }),
+
+    estoque_maximo: z
+        .number({
+            required_error: "O estoque máximo é obrigatório",
+            invalid_type_error: "O estoque máximo deve ser um número",
+        })
+        .refine((val) => val >= 0, {
+            message: "O estoque máximo deve ser um número positivo",
+        }),
 
     unidade_medida: z.enum(["UNIDADE", "KG", "LITRO", "CX", "PC"], {
         errorMap: () => ({ message: "Unidade de medida inválida" }),

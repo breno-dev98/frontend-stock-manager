@@ -7,12 +7,33 @@ import { CategoriaService } from "../../services/categoriasService";
 import { ProdutoService } from "../../services/produtoService";
 import { FornecedorService } from "../../services/fornecedoresService";
 import { EntradaService } from "../../services/entradaService";
+import BaseTable from "../../components/ui/BaseTable";
 
 const DashboardPage = () => {
   const [categorias, setCategorias] = useState([]);
   const [produtos, setProdutos] = useState([]);
   const [fornecedores, setFornecedores] = useState([]);
   const [entradas, setEntradas] = useState([]);
+
+  const columns = [
+    { field: "produto", header: "Produto" },
+    {
+      field: "categoria",
+      header: "Categoria",
+    },
+    {
+      field: "estoque_atual",
+      header: "Estoque Atual",
+    },
+    {
+      field: "estoque_minimo",
+      header: "Estoque Mínimo",
+    },
+    {
+      field: "status",
+      header: "Status",
+    },
+  ];
   useEffect(() => {
     const fetchCategorias = async () => {
       const data = await CategoriaService.getAll();
@@ -126,6 +147,9 @@ const DashboardPage = () => {
                 />
               </div>
             </div>
+          </div>
+          <div className="col-span-1 md:col-span-5 flex flex-col">
+            <BaseTable headerTitle="Produtos com estoque crítico" columns={columns} />
           </div>
         </section>
       </div>

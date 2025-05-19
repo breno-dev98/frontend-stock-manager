@@ -8,7 +8,7 @@ export default function BaseTable({ data = [], columns = [], headerTitle = "Tabl
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h1 className="md:text-xl sm:text-md text-md text-900 font-bold">{headerTitle}</h1>
-      <div className="flex flex-col gap-2">
+      <div className="flex gap-2">
         <div className="p-inputgroup flex-1">
           <InputText type="search" value={valueSearch} onChange={onChangeSearch} placeholder="Buscar..." />
           <Button icon="pi pi-search" className="p-button-secondary" />
