@@ -61,8 +61,8 @@ const ProdutosPage = () => {
   });
 
   const unidade = watch("unidade_medida");
-  const custo = watch("preco_custo")
-  const venda = watch("preco_venda")
+  const custo = watch("preco_custo");
+  const venda = watch("preco_venda");
   useEffect(() => {
     const fetFornecedores = async () => {
       const data = await FornecedorService.getAll();
@@ -141,8 +141,29 @@ const ProdutosPage = () => {
       },
     },
     { field: "unidade_medida", header: "Un. Medida" },
-    { field: "estoque_minimo", header: "Estoque mínimo", body: (rowData) => rowData.estoque_minimo },
-    { field: "estoque_maximo", header: "Estoque máximo", body: (rowData) => rowData.estoque_maximo },
+    {
+      field: "estoque_minimo",
+      header: "Estoque mínimo",
+      body: (rowData) => {
+        const unidade = rowData.unidade_medida;
+        const estoqueMinimo = Number(rowData.estoque_minimo);
+
+        if (isNaN(estoqueMinimo)) return "-"
+
+        const casasDecimais = unidade === "KG" ? 3 : 0;
+        return estoqueMinimo.toFixed(casasDecimais)
+      },
+    },
+    {
+      field: "estoque_maximo", header: "Estoque máximo", body: (rowData) => {
+        const unidade = rowData.unidade_medida;
+        const estoqueMaximo = Number(rowData.estoque_maximo);
+
+        if (isNaN(estoqueMaximo)) return "-";
+
+        const casasDecimais = unidade === "KG" ? 3 : 0;
+        return estoqueMaximo.toFixed(casasDecimais);
+    } },
     {
       field: "acoes",
       header: "Ações",
@@ -213,7 +234,7 @@ const ProdutosPage = () => {
     return markup;
   };
 
-  const Markup = calcularMarkUp().toFixed(2)
+  const Markup = calcularMarkUp().toFixed(2);
 
   return (
     <PagesLayout title="Gerenciamento de Produtos">
@@ -236,7 +257,6 @@ const ProdutosPage = () => {
         onHide={handleCloseModal}
         onSubmit={handleSubmit(handleSave)}
       >
-
         <FormProdutos
           control={control}
           errors={errors}
