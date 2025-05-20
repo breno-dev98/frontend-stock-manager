@@ -4,16 +4,18 @@ import { Column } from "primereact/column";
 import { Button } from "primereact/button";
 import { InputText } from "primereact/inputtext";
 
-export default function BaseTable({ data = [], columns = [], headerTitle = "Table", valueSearch, onChangeSearch, sortMode = "single", sortable = false, emptyMessage = "Nenhum item encontrado", buttonLabel = "Button", onClick = () => alert("Insira sua função aqui") }) {
+export default function BaseTable({ data = [], columns = [], headerTitle = "Table", valueSearch, onChangeSearch, iconButton = "pi pi-plus", severityButton = "primary", outlined, sortMode = "single", sortable = false, emptyMessage = "Nenhum item encontrado", buttonLabel = "Button", onClick = () => alert("Insira sua função aqui") }) {
   const header = (
     <div className="flex flex-wrap items-center justify-between gap-2">
       <h1 className="md:text-xl sm:text-md text-md text-900 font-bold">{headerTitle}</h1>
       <div className="flex gap-2">
-        <div className="p-inputgroup flex-1">
-          <InputText type="search" value={valueSearch} onChange={onChangeSearch} placeholder="Buscar..." />
-          <Button icon="pi pi-search" className="p-button-secondary" />
-        </div>
-        <Button icon="pi pi-plus" label={buttonLabel} onClick={onClick} />
+        {valueSearch !== undefined && onChangeSearch && (
+          <div className="p-inputgroup flex-1">
+            <InputText type="search" value={valueSearch} onChange={onChangeSearch} placeholder="Buscar..." />
+            <Button icon="pi pi-search" />
+          </div>
+        )}
+        <Button icon={iconButton} label={buttonLabel} severity={severityButton} outlined={outlined} onClick={onClick} />
       </div>
     </div>
   );

@@ -8,21 +8,24 @@ import { ProdutoService } from "../../services/produtoService";
 import { FornecedorService } from "../../services/fornecedoresService";
 import { EntradaService } from "../../services/entradaService";
 import BaseTable from "../../components/ui/BaseTable";
+import { Tag } from "primereact/tag";
 
 const DashboardPage = () => {
   const [categorias, setCategorias] = useState([]);
   const [produtos, setProdutos] = useState([]);
   const [fornecedores, setFornecedores] = useState([]);
   const [entradas, setEntradas] = useState([]);
+  const [produtosCriticos, setProdutosCriticos] = useState([]) 
 
   const columns = [
-    { field: "produto", header: "Produto" },
+    { field: "nome", header: "Produto" },
     {
-      field: "categoria",
+      field: "categoria_id",
       header: "Categoria",
+      body: (rowData) => categorias.find((c) => c.id === rowData.categoria_id)?.nome || "-"
     },
     {
-      field: "estoque_atual",
+      field: "quantidade",
       header: "Estoque Atual",
     },
     {
@@ -32,6 +35,9 @@ const DashboardPage = () => {
     {
       field: "status",
       header: "Status",
+      body: (rowData) => {
+        return rowData.quantidade <= rowData.estoque_minimo / 2 ? <Tag value="Crítico" severity="danger"/> : <Tag value="Baixo" severity="warning" />;
+      }
     },
   ];
   useEffect(() => {
@@ -106,6 +112,14 @@ const DashboardPage = () => {
       },
     ],
   };
+
+  useEffect(() => {
+    const listaProdutosCriticos = produtos.filter((p) => p.quantidade <= p.estoque_minimo);
+    setProdutosCriticos(listaProdutosCriticos);
+  }, [produtos]);
+
+  
+  
   return (
     <PagesLayout title="Dashboard">
       <div>
@@ -149,7 +163,7 @@ const DashboardPage = () => {
             </div>
           </div>
           <div className="col-span-1 md:col-span-5 flex flex-col">
-            <BaseTable headerTitle="Produtos com estoque crítico" columns={columns} />
+            <BaseTable headerTitle="Produtos Com Estoque Crítico" buttonLabel="Ver todos" iconButton="null" outlined columns={columns} data={produtosCriticos}/>
           </div>
         </section>
       </div>

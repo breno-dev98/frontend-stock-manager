@@ -3,7 +3,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
         {/* Card Total Produtos */}
         <div
-          className="py-6 pl-6 pr-12 rounded-lg bg-white"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -19,7 +19,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
 
         {/* Card Estoque Crítico */}
         <div
-          className="py-6 pl-6 pr-12 rounded-lg bg-white"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -35,7 +35,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
 
         {/* Card Fornecedores */}
         <div
-          className="py-6 pl-6 pr-12 rounded-lg bg-white"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
@@ -51,7 +51,7 @@ const DashboardCards = ({totalProdutos, totalEstoqueCritico, totalFornecedores, 
 
         {/* Card Transações */}
         <div
-          className="py-6 pl-6 pr-12 rounded-lg bg-white"
+          className="py-6 pl-6 pr-12 rounded-lg bg-white col-span-2 sm:col-span-2 md:col-span-2 lg:col-span-1"
           style={{
             boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
           }}
