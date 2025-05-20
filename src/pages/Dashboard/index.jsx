@@ -145,7 +145,7 @@ const DashboardPage = () => {
   return (
     <PagesLayout title="Dashboard">
       <div>
-        <DashboardCards totalProdutos={produtos.length} totalFornecedores={fornecedores.length} totalTransacoes={entradas.length} />
+        <DashboardCards totalProdutos={produtos.length} totalFornecedores={fornecedores.length} totalTransacoes={entradas.length} totalEstoqueCritico={produtosCriticos.length}/>
         <section className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {/* Gráfico de Linha */}
           <div className="col-span-1 md:col-span-3 flex flex-col w-full border my-5 border-gray-300 rounded-xl shadow-md bg-white min-h-[400px]">

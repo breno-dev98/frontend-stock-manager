@@ -24,7 +24,18 @@ export default function BaseTable({ data = [], columns = [], headerTitle = "Tabl
 
   return (
     <div className="border border-gray-400 rounded-lg mt-4 overflow-hidden">
-          <DataTable value={data} header={header} sortMode={sortMode} footer={footer} emptyMessage={emptyMessage} tableStyle={{ minWidth: "60rem" }}>
+      <DataTable
+        value={data}
+        header={header}
+        stripedRows
+        paginator
+        rows={5}
+        rowsPerPageOptions={[5, 10, 25, 50]}
+        sortMode={sortMode}
+        footer={footer}
+        emptyMessage={emptyMessage}
+        tableStyle={{ minWidth: "60rem" }}
+      >
         {columns.map((col, index) => (
           <Column key={index} field={col.field} sortable={col.field === "acoes" ? false : sortable} header={col.header} body={col.body} />
         ))}
