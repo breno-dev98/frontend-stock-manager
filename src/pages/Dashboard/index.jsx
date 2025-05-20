@@ -103,12 +103,34 @@ const DashboardPage = () => {
     ],
   };
 
+  const entradaPorMes = contarPorMes(entradas, "data_entrada")
+  // const saidaPorMes = contarPorMes(saidas, "data_saida")
+
+  function contarPorMes(array, campoData) {
+    const resultado = Array(12).fill(0);
+
+    array.forEach((item) => {
+      const data = new Date(item[campoData]); // acessa o campo dinamicamente
+      const mes = data.getMonth(); // 0 = Jan, 11 = Dez
+      resultado[mes]++;
+    });
+
+    return resultado;
+  }
+  
+  
+
+  const documentStyle = getComputedStyle(document.documentElement);
   const lineData = {
     labels: mesesDoAno,
     datasets: [
       {
-        data: [300, 50, 100],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        label: "Entradas",
+        data: entradaPorMes,
+        backgroundColor: [documentStyle.getPropertyValue("--green-50"), "red"],
+        fill: false,
+        borderColor: documentStyle.getPropertyValue("--green-400"),
+        tension: 0.4,
       },
     ],
   };
