@@ -136,6 +136,7 @@ const FormProduto = ({ control, errors, categorias, marcas, fornecedores, unidad
                   useGrouping={false}
                   className="w-full rounded"
                   invalid={!!errors.ean}
+                  maxLength={13}
                 />
                 <label htmlFor="ean">EAN</label>
               </FloatLabel>
