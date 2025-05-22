@@ -1,9 +1,12 @@
 import axios from "axios";
 
+const ip = window.location.hostname
+const port = import.meta.env.VITE_API_PORT
+const apiBaseURL = `http://${ip}:${port}/api`
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL,
+    baseURL: apiBaseURL,
     timeout: 10000,
-    headers: {'Content-Type': 'application/json'}
+    headers: { 'Content-Type': 'application/json' },
 })
 
 api.interceptors.request.use(
